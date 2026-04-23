@@ -1,0 +1,15 @@
+{
+  "name": "filmlink-form-sender",
+  "version": "1.0.0",
+  "description": "FilmLink 施設お問い合わせフォーム自動送信ツール",
+  "main": "send_forms.js",
+  "scripts": {
+    "send": "node send_forms.js",
+    "preview": "node send_forms.js --preview"
+  },
+  "dependencies": {
+    "playwright": "^1.43.0",
+    "csv-parse": "^5.5.3",
+    "csv-stringify": "^6.4.6"
+  }
+}

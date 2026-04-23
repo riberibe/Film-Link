@@ -1,0 +1,1755 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FilmLink — あなたのサービスに、映像を足しませんか。</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;600;700&family=Noto+Sans+JP:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --y:     #FFD600;
+      --y-dk:  #E6C200;
+      --y-lt:  rgba(255,214,0,.10);
+      --blk:   #0D0D0D;
+      --dk:    #141414;
+      --dk2:   #1E1E1E;
+      --mid:   #555;
+      --sub:   #888;
+      --bdr:   #E3DFD7;
+      --cream: #F5F2EB;
+      --wht:   #FFFFFF;
+    }
+
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Noto Sans JP', -apple-system, sans-serif;
+      color: var(--blk);
+      background: var(--wht);
+      line-height: 1.75;
+      -webkit-font-smoothing: antialiased;
+    }
+    .en { font-family: 'Quicksand', sans-serif; }
+
+    /* ── Layout ── */
+    .container { max-width: 1120px; margin: 0 auto; padding: 0 48px; }
+    @media (max-width: 768px) { .container { padding: 0 24px; } }
+
+    /* Full-page section base */
+    .page {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      position: relative;
+      overflow: hidden;
+      padding: 120px 0 80px;
+    }
+    .page > .container { width: 100%; }
+
+    /* Colour themes */
+    .page--dark   { background: var(--dk);   color: var(--wht); }
+    .page--dark2  { background: var(--dk2);  color: var(--wht); }
+    .page--cream  { background: var(--cream); color: var(--blk); }
+    .page--white  { background: var(--wht);  color: var(--blk); }
+    .page--yellow { background: var(--y);    color: var(--blk); }
+
+    /* ── Geometric patterns ── */
+    .pat-dot::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: radial-gradient(circle, rgba(255,214,0,.22) 1.5px, transparent 1.5px);
+      background-size: 32px 32px;
+      pointer-events: none;
+    }
+    .pat-diag::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: repeating-linear-gradient(
+        -45deg, transparent, transparent 12px,
+        rgba(255,214,0,.055) 12px, rgba(255,214,0,.055) 13px
+      );
+      pointer-events: none;
+    }
+    .pat-grid::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(255,214,0,.055) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,214,0,.055) 1px, transparent 1px);
+      background-size: 44px 44px;
+      pointer-events: none;
+    }
+    .pat-cross::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(0,0,0,.045) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,0,0,.045) 1px, transparent 1px);
+      background-size: 36px 36px;
+      pointer-events: none;
+    }
+    .pat-dot-blk::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: radial-gradient(circle, rgba(0,0,0,.06) 1.5px, transparent 1.5px);
+      background-size: 28px 28px;
+      pointer-events: none;
+    }
+    .page > *:not(::before) { position: relative; z-index: 1; }
+
+    /* ── Section title (capworks style) ── */
+    .st { position: relative; margin-bottom: 72px; }
+    .st-en {
+      font-family: 'Quicksand', sans-serif;
+      font-size: clamp(64px, 10vw, 120px);
+      font-weight: 700;
+      letter-spacing: .04em;
+      line-height: 1;
+      color: rgba(13,13,13,.04);
+      user-select: none;
+      pointer-events: none;
+    }
+    .page--dark  .st-en,
+    .page--dark2 .st-en { color: rgba(255,255,255,.05); }
+    .st-body {
+      position: absolute;
+      top: 50%;
+      left: 0;
+      transform: translateY(-50%);
+    }
+    .st-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: 'Quicksand', sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      color: var(--y-dk);
+      margin-bottom: 8px;
+    }
+    .page--dark  .st-label,
+    .page--dark2 .st-label { color: var(--y); }
+    .st-label::before {
+      content: '';
+      display: block;
+      width: 22px;
+      height: 2px;
+      background: currentColor;
+    }
+    .st-ja {
+      font-size: clamp(22px, 3.5vw, 34px);
+      font-weight: 700;
+      line-height: 1.3;
+      letter-spacing: -.025em;
+    }
+    .page--dark  .st-ja,
+    .page--dark2 .st-ja { color: var(--wht); }
+    .st-sub {
+      font-size: 15px;
+      color: var(--sub);
+      line-height: 1.85;
+      max-width: 560px;
+      margin-top: 10px;
+    }
+    .page--dark  .st-sub,
+    .page--dark2 .st-sub { color: rgba(255,255,255,.45); }
+
+    /* ── Buttons ── */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 14px 30px;
+      border-radius: 3px;
+      font-size: 14px;
+      font-weight: 700;
+      font-family: 'Noto Sans JP', sans-serif;
+      text-decoration: none;
+      cursor: pointer;
+      border: none;
+      transition: transform .3s cubic-bezier(.78,.07,0,1), box-shadow .3s;
+    }
+    .btn:hover { transform: translateY(-2px); box-shadow: 0 14px 40px rgba(0,0,0,.2); }
+    .btn--y   { background: var(--y); color: var(--blk); }
+    .btn--blk { background: var(--blk); color: var(--wht); }
+    .btn--out { border: 1.5px solid rgba(255,255,255,.35); color: var(--wht); background: transparent; }
+    .btn--out:hover { border-color: var(--y); color: var(--y); box-shadow: none; }
+
+    /* ── Image placeholder ── */
+    .imgph {
+      background: rgba(255,255,255,.04);
+      border: 2px dashed rgba(255,214,0,.35);
+      border-radius: 8px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      color: rgba(255,255,255,.3);
+      font-size: 13px;
+    }
+    .page--white  .imgph,
+    .page--cream  .imgph {
+      background: rgba(0,0,0,.03);
+      border-color: rgba(0,0,0,.15);
+      color: var(--sub);
+    }
+    .imgph-icon { font-size: 28px; opacity: .5; }
+    .imgph-label { font-size: 13px; font-weight: 500; }
+    .imgph-size  { font-size: 11px; opacity: .6; }
+
+    /* ── Scroll hint arrow ── */
+    .scroll-hint {
+      position: absolute;
+      bottom: 32px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      font-size: 10px;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,.3);
+      animation: bounce 2s infinite;
+    }
+    .page--white .scroll-hint,
+    .page--cream .scroll-hint { color: rgba(0,0,0,.2); }
+    .scroll-hint svg { width: 16px; height: 16px; }
+    @keyframes bounce {
+      0%, 100% { transform: translateX(-50%) translateY(0); }
+      50%       { transform: translateX(-50%) translateY(5px); }
+    }
+
+    /* ── Side page indicator ── */
+    .page-dots {
+      position: fixed;
+      right: 28px;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 300;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .page-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: rgba(255,255,255,.25);
+      cursor: pointer;
+      transition: background .3s, transform .3s;
+    }
+    .page-dot.active {
+      background: var(--y);
+      transform: scale(1.5);
+    }
+    @media (max-width: 768px) { .page-dots { display: none; } }
+
+    /* ── Nav ── */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 200;
+      background: rgba(13,13,13,.94);
+      backdrop-filter: blur(14px);
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 40px;
+      border-bottom: 1px solid rgba(255,255,255,.05);
+    }
+    .nav-logo {
+      font-family: 'Quicksand', sans-serif;
+      font-size: 19px;
+      font-weight: 700;
+      color: var(--wht);
+      text-decoration: none;
+      letter-spacing: .02em;
+    }
+    .nav-logo span { color: var(--y); }
+    .nav-links { display: flex; gap: 28px; list-style: none; }
+    .nav-links a {
+      font-size: 11px;
+      font-weight: 600;
+      font-family: 'Quicksand', sans-serif;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,.45);
+      text-decoration: none;
+      transition: color .2s;
+    }
+    .nav-links a:hover { color: var(--y); }
+    .nav-cta {
+      padding: 8px 20px;
+      background: var(--y);
+      color: var(--blk);
+      border-radius: 3px;
+      font-size: 12px;
+      font-weight: 700;
+      text-decoration: none;
+      transition: background .2s;
+    }
+    .nav-cta:hover { background: var(--y-dk); }
+    @media (max-width: 768px) { .nav-links { display: none; } }
+
+    /* ══════════════════════════════════════════
+       § 1  HERO
+    ══════════════════════════════════════════ */
+    #hero {
+      min-height: 100vh;
+      background: var(--dk);
+      display: flex;
+      align-items: center;
+      position: relative;
+      overflow: hidden;
+      padding: 100px 0 80px;
+    }
+    #hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: radial-gradient(circle, rgba(255,214,0,.2) 1.5px, transparent 1.5px);
+      background-size: 36px 36px;
+    }
+    #hero::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 55% 60% at 75% 45%, rgba(255,214,0,.09) 0%, transparent 70%),
+        linear-gradient(to bottom, transparent 40%, rgba(14,14,14,.7) 100%);
+    }
+    .hero-z { position: relative; z-index: 1; }
+    .hero-kicker {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-family: 'Quicksand', sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      color: var(--y);
+      margin-bottom: 28px;
+    }
+    .hero-kicker::before {
+      content: '';
+      display: block;
+      width: 28px; height: 2px;
+      background: var(--y);
+    }
+    .hero-h1 {
+      font-size: clamp(38px, 6.5vw, 70px);
+      font-weight: 900;
+      line-height: 1.15;
+      letter-spacing: -.03em;
+      color: var(--wht);
+      margin-bottom: 8px;
+    }
+    .hero-h1 .yel { color: var(--y); }
+    .hero-h1b {
+      font-size: clamp(22px, 3.5vw, 42px);
+      font-weight: 700;
+      letter-spacing: -.025em;
+      color: rgba(255,255,255,.6);
+      margin-bottom: 36px;
+    }
+    .hero-body {
+      font-size: 16px;
+      color: rgba(255,255,255,.55);
+      line-height: 2;
+      max-width: 520px;
+      margin-bottom: 48px;
+    }
+    .hero-btns { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 56px; }
+    .hero-pills { display: flex; gap: 10px; flex-wrap: wrap; }
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      color: rgba(255,255,255,.4);
+      border: 1px solid rgba(255,255,255,.1);
+      padding: 5px 13px;
+      border-radius: 100px;
+    }
+    .pill::before { content: '✓'; color: var(--y); font-weight: 700; font-size: 11px; }
+
+    /* ══════════════════════════════════════════
+       § 2  CONCEPT
+    ══════════════════════════════════════════ */
+    .concept-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2px;
+      background: var(--bdr);
+      border: 1px solid var(--bdr);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    @media (max-width: 700px) { .concept-grid { grid-template-columns: 1fr; } }
+    .concept-card {
+      background: var(--wht);
+      padding: 44px 36px;
+      position: relative;
+    }
+    .concept-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0;
+      width: 4px; height: 100%;
+      background: var(--y);
+    }
+    .concept-n {
+      font-family: 'Quicksand', sans-serif;
+      font-size: 52px;
+      font-weight: 700;
+      color: var(--y);
+      line-height: 1;
+      margin-bottom: 18px;
+    }
+    .concept-title {
+      font-size: 17px;
+      font-weight: 700;
+      margin-bottom: 12px;
+      line-height: 1.4;
+    }
+    .concept-body { font-size: 14px; color: var(--mid); line-height: 1.85; }
+
+    /* ══════════════════════════════════════════
+       § 3  STRENGTH
+    ══════════════════════════════════════════ */
+    .str-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+    @media (max-width: 700px) { .str-grid { grid-template-columns: 1fr; } }
+    .str-card {
+      background: rgba(255,255,255,.04);
+      border: 1px solid rgba(255,255,255,.08);
+      border-radius: 6px;
+      padding: 40px 32px;
+      transition: transform .35s cubic-bezier(.78,.07,0,1), border-color .3s;
+    }
+    .str-card:hover { transform: translateY(-5px); border-color: rgba(255,214,0,.35); }
+    .str-ico {
+      width: 52px; height: 52px;
+      border-radius: 10px;
+      background: var(--y-lt);
+      border: 1px solid rgba(255,214,0,.2);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 24px;
+      margin-bottom: 22px;
+    }
+    .str-num {
+      font-family: 'Quicksand', sans-serif;
+      font-size: 11px; font-weight: 700;
+      letter-spacing: .15em;
+      color: var(--y);
+      margin-bottom: 8px;
+    }
+    .str-title { font-size: 18px; font-weight: 700; color: var(--wht); margin-bottom: 14px; line-height: 1.4; }
+    .str-body  { font-size: 13px; color: rgba(255,255,255,.48); line-height: 1.9; }
+
+    /* ══════════════════════════════════════════
+       § 4  REVENUE MODEL (仕組み)
+    ══════════════════════════════════════════ */
+    .rev-model {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: center;
+    }
+    @media (max-width: 768px) { .rev-model { grid-template-columns: 1fr; gap: 48px; } }
+    .rev-model-left .lead {
+      font-size: clamp(18px, 2.5vw, 24px);
+      font-weight: 700;
+      color: var(--wht);
+      line-height: 1.55;
+      margin-bottom: 32px;
+    }
+    .rev-model-left .lead em { color: var(--y); font-style: normal; }
+    .rev-points { list-style: none; }
+    .rev-points li {
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+      padding: 14px 0;
+      border-bottom: 1px solid rgba(255,255,255,.07);
+      font-size: 14px;
+      color: rgba(255,255,255,.6);
+      line-height: 1.7;
+    }
+    .rev-points li:last-child { border-bottom: none; }
+    .rev-points .ico {
+      flex-shrink: 0;
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      background: var(--y-lt);
+      border: 1px solid rgba(255,214,0,.2);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 13px;
+      margin-top: 1px;
+    }
+
+    /* Split visual */
+    .split-visual {
+      background: rgba(255,255,255,.03);
+      border: 1px solid rgba(255,255,255,.09);
+      border-radius: 12px;
+      padding: 36px 32px;
+    }
+    .split-top {
+      text-align: center;
+      margin-bottom: 28px;
+    }
+    .split-amount {
+      font-family: 'Quicksand', sans-serif;
+      font-size: 52px;
+      font-weight: 700;
+      color: var(--wht);
+      line-height: 1;
+    }
+    .split-label {
+      font-size: 12px;
+      color: rgba(255,255,255,.4);
+      margin-top: 6px;
+    }
+    .split-arrow {
+      text-align: center;
+      font-size: 20px;
+      color: var(--y);
+      margin-bottom: 20px;
+    }
+    .split-rows { display: flex; flex-direction: column; gap: 14px; }
+    .split-row {
+      background: rgba(255,255,255,.04);
+      border-radius: 8px;
+      padding: 18px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .split-row.you { border: 1px solid rgba(255,214,0,.3); background: rgba(255,214,0,.07); }
+    .split-row-left .who { font-size: 13px; font-weight: 700; color: var(--wht); }
+    .split-row.you .who { color: var(--y); }
+    .split-row-left .pct { font-size: 11px; color: rgba(255,255,255,.4); margin-top: 2px; }
+    .split-row-right {
+      font-family: 'Quicksand', sans-serif;
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--wht);
+    }
+    .split-row.you .split-row-right { color: var(--y); }
+    .split-mini-bar {
+      height: 4px;
+      background: rgba(255,255,255,.08);
+      border-radius: 100px;
+      margin-top: 10px;
+      overflow: hidden;
+    }
+    .split-mini-fill {
+      height: 100%;
+      background: var(--y);
+      border-radius: 100px;
+    }
+
+    /* ══════════════════════════════════════════
+       § 5  REVENUE EXAMPLE (介護施設)
+    ══════════════════════════════════════════ */
+    .rev-ex-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 72px;
+      align-items: center;
+    }
+    @media (max-width: 768px) { .rev-ex-grid { grid-template-columns: 1fr; gap: 40px; } }
+    .rev-ex-imgph {
+      height: 420px;
+      border-radius: 12px;
+    }
+    .rev-ex-right .context {
+      font-size: 13px;
+      color: rgba(255,255,255,.45);
+      margin-bottom: 10px;
+    }
+    .rev-ex-right .title {
+      font-size: clamp(20px, 2.8vw, 28px);
+      font-weight: 700;
+      color: var(--wht);
+      margin-bottom: 28px;
+      line-height: 1.4;
+    }
+
+    .ex-service-box {
+      background: rgba(255,255,255,.05);
+      border: 1px solid rgba(255,255,255,.1);
+      border-radius: 8px;
+      padding: 20px 24px;
+      margin-bottom: 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .ex-service-name { font-size: 14px; font-weight: 500; color: rgba(255,255,255,.7); }
+    .ex-service-price {
+      font-family: 'Quicksand', sans-serif;
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--wht);
+    }
+
+    .ex-split-rows { display: flex; flex-direction: column; gap: 10px; margin-bottom: 28px; }
+    .ex-split-row {
+      border-radius: 6px;
+      padding: 14px 18px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .ex-split-row.filmlink { background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.07); }
+    .ex-split-row.you-row  { background: rgba(255,214,0,.1); border: 1px solid rgba(255,214,0,.25); }
+    .ex-row-who { font-size: 13px; font-weight: 700; color: rgba(255,255,255,.6); }
+    .ex-split-row.you-row .ex-row-who { color: var(--y); }
+    .ex-row-pct { font-size: 11px; color: rgba(255,255,255,.35); margin-top: 2px; }
+    .ex-row-amt {
+      font-family: 'Quicksand', sans-serif;
+      font-size: 26px;
+      font-weight: 700;
+      color: var(--wht);
+    }
+    .ex-split-row.you-row .ex-row-amt { color: var(--y); }
+
+    .ex-bar { height: 6px; background: rgba(255,255,255,.08); border-radius: 100px; overflow: hidden; margin-bottom: 28px; }
+    .ex-bar-fill { height: 100%; background: var(--y); border-radius: 100px; width: 20%; }
+
+    .ex-proj-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+    .ex-proj-card {
+      background: rgba(255,255,255,.04);
+      border: 1px solid rgba(255,255,255,.07);
+      border-radius: 6px;
+      padding: 16px;
+      text-align: center;
+    }
+    .ex-proj-case { font-size: 11px; color: rgba(255,255,255,.4); margin-bottom: 6px; }
+    .ex-proj-monthly {
+      font-family: 'Quicksand', sans-serif;
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--y);
+      margin-bottom: 2px;
+    }
+    .ex-proj-annual { font-size: 11px; color: rgba(255,255,255,.35); }
+
+    /* ══════════════════════════════════════════
+       § 6  REVENUE SIMULATION
+    ══════════════════════════════════════════ */
+    #rev-sim { padding: 120px 0 100px; min-height: 100vh; }
+    .sim-rows { display: flex; flex-direction: column; gap: 0; margin-top: 64px; }
+    .sim-row {
+      border-top: 1px solid var(--bdr);
+      padding: 36px 0;
+      display: grid;
+      grid-template-columns: 220px 1fr 200px;
+      gap: 48px;
+      align-items: center;
+      transition: background .25s;
+    }
+    .sim-row:last-child { border-bottom: 1px solid var(--bdr); }
+    .sim-row:hover { background: rgba(255,214,0,.04); }
+    @media (max-width: 900px) {
+      .sim-row { grid-template-columns: 1fr; gap: 16px; }
+    }
+    .sim-left {}
+    .sim-case {
+      font-family: 'Quicksand', sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--mid);
+      margin-bottom: 4px;
+    }
+    .sim-count {
+      font-size: 28px;
+      font-weight: 900;
+      letter-spacing: -.02em;
+      color: var(--blk);
+      line-height: 1.1;
+    }
+    .sim-count span {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--mid);
+    }
+    .sim-base {
+      font-size: 12px;
+      color: var(--sub);
+      margin-top: 4px;
+    }
+    .sim-center {}
+    .sim-bar-outer {
+      height: 10px;
+      background: var(--bdr);
+      border-radius: 100px;
+      overflow: hidden;
+      margin-bottom: 12px;
+    }
+    .sim-bar-inner {
+      height: 100%;
+      background: var(--y);
+      border-radius: 100px;
+      transition: width 1s cubic-bezier(.22,1,.36,1);
+    }
+    .sim-nums {
+      display: flex;
+      gap: 48px;
+    }
+    .sim-num-item {}
+    .sim-num-label { font-size: 11px; color: var(--sub); letter-spacing: .08em; margin-bottom: 2px; }
+    .sim-num-val {
+      font-family: 'Quicksand', sans-serif;
+      font-size: clamp(26px, 3vw, 36px);
+      font-weight: 700;
+      color: var(--blk);
+      line-height: 1;
+    }
+    .sim-num-val.big-annual {
+      font-size: clamp(28px, 3.5vw, 42px);
+      color: var(--blk);
+    }
+    .sim-right {
+      text-align: right;
+    }
+    .sim-right-annual {
+      font-family: 'Quicksand', sans-serif;
+      font-size: clamp(32px, 4vw, 48px);
+      font-weight: 700;
+      color: var(--blk);
+      line-height: 1;
+    }
+    .sim-right-label {
+      font-size: 12px;
+      color: var(--sub);
+      margin-top: 4px;
+    }
+    .sim-row:hover .sim-bar-inner { filter: brightness(1.08); }
+
+    /* Highlight row */
+    .sim-row.sim-highlight {
+      position: relative;
+    }
+    .sim-row.sim-highlight::before {
+      content: '';
+      position: absolute;
+      left: -16px;
+      top: 0; bottom: 0;
+      width: 4px;
+      background: var(--y);
+      border-radius: 2px;
+    }
+    .sim-row.sim-highlight .sim-count,
+    .sim-row.sim-highlight .sim-right-annual { color: var(--y-dk); }
+    .sim-row.sim-highlight .sim-bar-inner { background: var(--y-dk); }
+
+    .sim-note {
+      font-size: 12px;
+      color: var(--sub);
+      margin-top: 28px;
+      line-height: 1.7;
+    }
+
+    /* ══════════════════════════════════════════
+       § 7  CASES
+    ══════════════════════════════════════════ */
+    .cases-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 28px;
+    }
+    @media (max-width: 768px) { .cases-layout { grid-template-columns: 1fr; } }
+    .case-card {
+      border: 1px solid var(--bdr);
+      border-radius: 10px;
+      overflow: hidden;
+      transition: transform .35s cubic-bezier(.78,.07,0,1), box-shadow .35s;
+    }
+    .case-card:hover { transform: translateY(-6px); box-shadow: 0 24px 64px rgba(0,0,0,.1); }
+    .case-top {
+      height: 240px;
+      position: relative;
+      display: flex;
+      align-items: flex-end;
+      padding: 24px;
+    }
+    .case-top--care {
+      background: var(--dk);
+    }
+    .case-top--care::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: radial-gradient(circle, rgba(255,214,0,.18) 1.5px, transparent 1.5px);
+      background-size: 24px 24px;
+    }
+    .case-top--travel {
+      background: #0d2a1c;
+    }
+    .case-top--travel::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: repeating-linear-gradient(
+        -45deg, transparent, transparent 8px,
+        rgba(255,214,0,.1) 8px, rgba(255,214,0,.1) 9px
+      );
+    }
+    .case-top-content { position: relative; z-index: 1; }
+    .case-badge {
+      display: inline-block;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .1em;
+      padding: 4px 10px;
+      border-radius: 3px;
+      margin-bottom: 8px;
+    }
+    .badge--real    { background: var(--y); color: var(--blk); }
+    .badge--concept { background: rgba(255,255,255,.14); color: rgba(255,255,255,.65); border: 1px solid rgba(255,255,255,.18); }
+    .case-top-title { font-size: 21px; font-weight: 700; color: var(--wht); line-height: 1.35; }
+    .case-bot { padding: 28px; background: var(--wht); }
+    .case-quote {
+      font-size: 14px;
+      font-weight: 500;
+      line-height: 1.75;
+      border-left: 3px solid var(--y);
+      padding-left: 14px;
+      color: var(--blk);
+      margin-bottom: 20px;
+    }
+    .case-list { list-style: none; margin-bottom: 18px; }
+    .case-list li {
+      font-size: 13px;
+      color: var(--mid);
+      padding: 6px 0;
+      padding-left: 16px;
+      position: relative;
+      border-bottom: 1px solid var(--cream);
+    }
+    .case-list li:last-child { border-bottom: none; }
+    .case-list li::before { content: '▸'; position: absolute; left: 0; color: var(--y-dk); font-size: 10px; top: 9px; }
+    .case-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+    .chip {
+      font-size: 11px;
+      background: var(--cream);
+      border: 1px solid var(--bdr);
+      padding: 3px 9px;
+      border-radius: 3px;
+      color: var(--mid);
+    }
+
+    /* ══════════════════════════════════════════
+       § 8  INDUSTRIES
+    ══════════════════════════════════════════ */
+    .ind-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+    }
+    @media (max-width: 700px) { .ind-grid { grid-template-columns: 1fr 1fr; } }
+    .ind-card {
+      background: rgba(255,255,255,.04);
+      border: 1px solid rgba(255,255,255,.08);
+      border-radius: 8px;
+      padding: 28px 22px;
+      text-align: center;
+      transition: border-color .3s, background .3s, transform .3s cubic-bezier(.78,.07,0,1);
+      cursor: default;
+    }
+    .ind-card:hover { border-color: rgba(255,214,0,.4); background: rgba(255,214,0,.06); transform: translateY(-3px); }
+    .ind-icon { font-size: 30px; margin-bottom: 12px; }
+    .ind-name { font-size: 13px; font-weight: 700; color: var(--wht); margin-bottom: 5px; }
+    .ind-eg   { font-size: 11px; color: rgba(255,255,255,.38); line-height: 1.6; }
+    .ind-card--cta { border-color: rgba(255,214,0,.25); background: rgba(255,214,0,.07); }
+    .ind-card--cta .ind-name { color: var(--y); }
+    .ind-card--cta .ind-eg   { color: rgba(255,214,0,.55); }
+
+    /* ══════════════════════════════════════════
+       § 9  FAQ
+    ══════════════════════════════════════════ */
+    .faq-wrap { margin-top: 64px; }
+    details { border-bottom: 1px solid var(--bdr); }
+    details:first-child { border-top: 1px solid var(--bdr); }
+    summary {
+      padding: 22px 0;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      list-style: none;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      color: var(--blk);
+      user-select: none;
+      transition: color .2s;
+    }
+    summary:hover { color: var(--mid); }
+    summary::-webkit-details-marker { display: none; }
+    .faq-ico {
+      flex-shrink: 0;
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      background: var(--cream);
+      border: 1px solid var(--bdr);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px;
+      color: var(--y-dk);
+      font-weight: 700;
+      transition: background .2s, transform .3s;
+    }
+    details[open] .faq-ico { background: var(--y); color: var(--blk); transform: rotate(45deg); }
+    .faq-ans { padding: 0 0 22px; font-size: 14px; color: var(--mid); line-height: 1.85; max-width: 720px; }
+
+    /* ══════════════════════════════════════════
+       § 10  CTA / CONTACT
+    ══════════════════════════════════════════ */
+    .cta-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: start;
+    }
+    @media (max-width: 768px) { .cta-layout { grid-template-columns: 1fr; gap: 48px; } }
+    .cta-left h2 {
+      font-size: clamp(28px, 4vw, 42px);
+      font-weight: 900;
+      line-height: 1.2;
+      letter-spacing: -.03em;
+      color: var(--blk);
+      margin-bottom: 20px;
+    }
+    .cta-left p { font-size: 15px; color: rgba(0,0,0,.55); line-height: 1.9; margin-bottom: 32px; }
+    .cta-checklist { list-style: none; }
+    .cta-checklist li {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 13px;
+      color: rgba(0,0,0,.55);
+      padding: 6px 0;
+    }
+    .cta-checklist li::before { content: '✓'; font-weight: 700; color: var(--blk); }
+
+    .form-box {
+      background: var(--blk);
+      border-radius: 10px;
+      padding: 36px;
+    }
+    .form-box-title { font-size: 16px; font-weight: 700; color: var(--wht); margin-bottom: 24px; }
+    .f-row { margin-bottom: 14px; }
+    .f-label { display: block; font-size: 11px; font-weight: 700; letter-spacing: .1em; color: rgba(255,255,255,.38); margin-bottom: 5px; }
+    .f-input, .f-select, .f-textarea {
+      width: 100%;
+      padding: 11px 14px;
+      background: rgba(255,255,255,.07);
+      border: 1px solid rgba(255,255,255,.11);
+      border-radius: 4px;
+      color: var(--wht);
+      font-size: 13px;
+      font-family: inherit;
+      outline: none;
+      transition: border-color .2s;
+    }
+    .f-input::placeholder, .f-textarea::placeholder { color: rgba(255,255,255,.22); }
+    .f-input:focus, .f-select:focus, .f-textarea:focus { border-color: var(--y); }
+    .f-select option { background: #1a1a1a; }
+    .f-textarea { min-height: 80px; resize: vertical; }
+    .f-submit {
+      width: 100%;
+      margin-top: 6px;
+      padding: 14px;
+      background: var(--y);
+      color: var(--blk);
+      border: none;
+      border-radius: 4px;
+      font-size: 14px;
+      font-weight: 700;
+      font-family: inherit;
+      cursor: pointer;
+      transition: background .2s, transform .3s cubic-bezier(.78,.07,0,1);
+    }
+    .f-submit:hover { background: var(--y-dk); transform: translateY(-1px); }
+    .f-note { font-size: 11px; color: rgba(255,255,255,.22); text-align: center; margin-top: 10px; }
+
+    /* ══ Footer ══ */
+    footer {
+      background: var(--blk);
+      border-top: 1px solid rgba(255,255,255,.06);
+      padding: 28px 48px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .footer-logo {
+      font-family: 'Quicksand', sans-serif;
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--wht);
+      text-decoration: none;
+    }
+    .footer-logo span { color: var(--y); }
+    footer p { font-size: 11px; color: rgba(255,255,255,.22); }
+
+    /* ══ Reveal animation ══ */
+    .rv {
+      opacity: 0;
+      transform: translateY(22px);
+      transition: opacity .65s ease, transform .65s cubic-bezier(.2,.8,.4,1);
+    }
+    .rv.on { opacity: 1; transform: none; }
+    .rv-d1 { transition-delay: .08s; }
+    .rv-d2 { transition-delay: .16s; }
+    .rv-d3 { transition-delay: .24s; }
+  </style>
+</head>
+<body>
+
+<!-- ════ Page dot indicators ════ -->
+<div class="page-dots" id="pageDots"></div>
+
+<!-- ════ Nav ════ -->
+<nav>
+  <a href="#hero" class="nav-logo">Film<span>Link</span></a>
+  <ul class="nav-links">
+    <li><a href="#story">STORY</a></li>
+    <li><a href="#concept">CONCEPT</a></li>
+    <li><a href="#strength">STRENGTH</a></li>
+    <li><a href="#rev-model">REVENUE</a></li>
+    <li><a href="#cases">CASES</a></li>
+    <li><a href="#faq">FAQ</a></li>
+  </ul>
+  <a href="#contact" class="nav-cta">無料相談</a>
+</nav>
+
+<!-- ════ § 1 HERO ════ -->
+<section id="hero" data-dot="Hero">
+  <div class="container">
+    <div class="hero-z">
+      <p class="hero-kicker">FilmLink — Partnership Program</p>
+      <h1 class="hero-h1">あなたのサービスに、<br><span class="yel">映像を足しませんか。</span></h1>
+      <p class="hero-h1b">一緒に、お客様の大切な瞬間を形にしましょう。</p>
+      <p class="hero-body">
+        FilmLinkは映像制作会社です。でも、自分たちだけで売りません。<br>
+        すでにお客様との接点をお持ちの事業者様と組んで、<br>
+        映像オプションをあなたのサービスの一部として届けます。
+      </p>
+      <div class="hero-btns">
+        <a href="#contact" class="btn btn--y">無料でご相談する →</a>
+        <a href="#concept" class="btn btn--out">詳しく見る</a>
+      </div>
+      <div class="hero-pills">
+        <span class="pill">初期費用ゼロ</span>
+        <span class="pill">月額費用ゼロ</span>
+        <span class="pill">撮影・編集はすべてFilmLink</span>
+        <span class="pill">売上の20%をシェア</span>
+      </div>
+    </div>
+  </div>
+  <div class="scroll-hint">
+    <span>SCROLL</span>
+    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+      <path d="M8 3v10M4 9l4 4 4-4"/>
+    </svg>
+  </div>
+</section>
+
+<!-- ════ § STORY ════ -->
+<section class="page page--dark2 pat-grid" id="story" data-dot="Story">
+  <div class="container">
+    <div class="st rv">
+      <div class="st-en">STORY</div>
+      <div class="st-body">
+        <p class="st-label">私たちの想い</p>
+        <h2 class="st-ja">映像は、「その場限り」を<br>永遠に変える力がある。</h2>
+      </div>
+    </div>
+    <div class="rv" style="max-width:720px; margin: 0 auto;">
+      <p style="font-size:16px; color:rgba(255,255,255,.75); line-height:2.1; margin-bottom:28px;">
+        子供の頃の運動会のビデオ、家族で出かけた公園でのホームビデオ。大人になってから見返したとき、当時の空気や感情が鮮明に蘇り、胸が熱くなった経験はありませんか？
+      </p>
+      <p style="font-size:16px; color:rgba(255,255,255,.75); line-height:2.1; margin-bottom:28px;">
+        人はそれぞれ、固有のストーリーを歩んでいます。その瞬間をフィルムとして残し、いつでもあの日の感動に帰れるようにすること。それが映像の本質的な価値だと、私たちは信じています。
+      </p>
+      <p style="font-size:16px; color:rgba(255,255,255,.75); line-height:2.1; margin-bottom:40px;">
+        私たちが組みたいのは、お客様の体験に本気で向き合っている事業者様です。単なる収益のためではなく、<em style="color:var(--y);font-style:normal">貴社が生み出す「最高の笑顔」を一生の記録として残すこと</em>を、一緒に実現したいと考えています。
+      </p>
+      <div style="border-left:3px solid var(--y); padding-left:20px;">
+        <p style="font-size:13px; color:rgba(255,255,255,.45); line-height:1.8;">現在、テスト導入パートナーとして一緒に実績を積んでいただける事業者様を探しています。実際の顧客満足度・導入効果を共に検証しながら、最良の形を一緒に作っていきましょう。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════ § 2 CONCEPT ════ -->
+<section class="page page--white pat-cross" id="concept" data-dot="Concept">
+  <div class="container">
+    <div class="st rv">
+      <div class="st-en">CONCEPT</div>
+      <div class="st-body">
+        <p class="st-label">コンセプト</p>
+        <h2 class="st-ja">「映像 × あなたの事業」で<br>新しい価値を生む</h2>
+        <p class="st-sub">FilmLinkは映像を「単独販売」しません。あなたの事業の中に映像オプションとして組み込み、お互いの強みを活かして届けます。</p>
+      </div>
+    </div>
+    <div class="concept-grid rv">
+      <div class="concept-card">
+        <div class="concept-n">01</div>
+        <div class="concept-title">あなたは「案内するだけ」</div>
+        <div class="concept-body">撮影・編集・納品・修正対応はすべてFilmLinkが担当します。あなたのスタッフに新たな業務は一切発生しません。QRコードや案内チラシを渡すだけで完結します。</div>
+      </div>
+      <div class="concept-card rv rv-d1">
+        <div class="concept-n">02</div>
+        <div class="concept-title">売れた分だけ収益になる</div>
+        <div class="concept-body">月額費用も最低件数の縛りもありません。お客様が申し込むたびに売上の20%が提携先様の収益として発生する、完全成果報酬型のモデルです。</div>
+      </div>
+      <div class="concept-card rv rv-d2">
+        <div class="concept-n">03</div>
+        <div class="concept-title">他社にない差別化軸になる</div>
+        <div class="concept-body">「この施設は映像オプションがある」「この工務店は引き渡し映像を撮ってくれる」——競合がやっていないサービスを、コストゼロで付け加えられます。既存のお客様への提案の幅も広がります。</div>
+      </div>
+    </div>
+  </div>
+  <div class="scroll-hint">
+    <span>SCROLL</span>
+    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+      <path d="M8 3v10M4 9l4 4 4-4"/>
+    </svg>
+  </div>
+</section>
+
+<!-- ════ § 3 STRENGTH ════ -->
+<section class="page page--dark pat-diag" id="strength" data-dot="Strength">
+  <div class="container">
+    <div class="st rv">
+      <div class="st-en">STRENGTH</div>
+      <div class="st-body">
+        <p class="st-label">選ばれる理由</p>
+        <h2 class="st-ja">FilmLinkが<br>選ばれる3つの理由</h2>
+      </div>
+    </div>
+    <div class="str-grid">
+      <div class="str-card rv">
+        <div class="str-ico">🎬</div>
+        <div class="str-num">REASON 01</div>
+        <div class="str-title">映像のプロが<br>全工程を担う</div>
+        <div class="str-body">撮影・照明・編集・BGM・テロップ・納品まで、FilmLinkのチームがすべて対応します。提携先様はただ「紹介する」だけでOKです。人を増やす必要も、機材を買う必要もありません。</div>
+      </div>
+      <div class="str-card rv rv-d1">
+        <div class="str-ico">💰</div>
+        <div class="str-num">REASON 02</div>
+        <div class="str-title">リスクゼロ・<br>成果報酬型</div>
+        <div class="str-body">初期投資ゼロ、月額費用ゼロ。申し込みが発生した時だけ収益が生まれる完全成果報酬型です。「とりあえず試してみる」が可能なので、失敗のリスクがありません。</div>
+      </div>
+      <div class="str-card rv rv-d2">
+        <div class="str-ico">🤝</div>
+        <div class="str-num">REASON 03</div>
+        <div class="str-title">「一緒に作る」<br>スタンス</div>
+        <div class="str-body">「FilmLinkのサービスを売ってください」ではなく、「一緒にお客様に喜んでもらいましょう」がスタンスです。提携先のブランドを守りながら、あなたの事業の延長として進めます。</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════ § 4 REVENUE MODEL (仕組み) ════ -->
+<section class="page page--dark2 pat-grid" id="rev-model" data-dot="Revenue">
+  <div class="container">
+    <div class="st rv">
+      <div class="st-en">REVENUE</div>
+      <div class="st-body">
+        <p class="st-label">報酬体系</p>
+        <h2 class="st-ja">報酬の仕組みは、<br>シンプルです。</h2>
+        <p class="st-sub">お客様が支払った金額を、FilmLinkと提携先様で分け合います。</p>
+      </div>
+    </div>
+    <div class="rev-model rv">
+      <div class="rev-model-left">
+        <p class="lead">
+          お客様が1本<em>5万円</em>のサービスを申し込む。<br>
+          そのうち<em>20%（10,000円）</em>が、<br>
+          あなたの事業の収益になります。
+        </p>
+        <ul class="rev-points">
+          <li>
+            <span class="ico">¥</span>
+            <span><strong style="color:var(--wht)">売れた分だけ発生</strong> — 月額・最低件数の縛りは一切なし。申し込みがなければ費用もゼロ</span>
+          </li>
+          <li>
+            <span class="ico">📅</span>
+            <span><strong style="color:var(--wht)">翌月末に振込</strong> — 売上が発生した翌月末に指定口座へ自動振り込み。管理の手間なし</span>
+          </li>
+          <li>
+            <span class="ico">📋</span>
+            <span><strong style="color:var(--wht)">毎月の明細を送付</strong> — 月次で件数・金額の明細をFilmLinkから送付します</span>
+          </li>
+        </ul>
+      </div>
+      <div class="split-visual">
+        <div class="split-top">
+          <div class="split-amount en">¥50,000</div>
+          <div class="split-label">お客様が支払う金額（例：日常記録ムービー）</div>
+        </div>
+        <div class="split-arrow">↓ 分配</div>
+        <div class="split-rows">
+          <div class="split-row you">
+            <div class="split-row-left">
+              <div class="who">提携先様（あなた）</div>
+              <div class="pct">売上の 20%</div>
+            </div>
+            <div class="split-row-right en">¥10,000</div>
+          </div>
+          <div class="split-mini-bar"><div class="split-mini-fill" style="width:20%"></div></div>
+          <div class="split-row">
+            <div class="split-row-left">
+              <div class="who">FilmLink（制作）</div>
+              <div class="pct">売上の 80%</div>
+            </div>
+            <div class="split-row-right en">¥40,000</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════ § 5 REVENUE EXAMPLE (介護施設) ════ -->
+<section class="page page--dark pat-dot" id="rev-example" data-dot="Example">
+  <div class="container">
+    <div class="st rv">
+      <div class="st-en">EXAMPLE</div>
+      <div class="st-body">
+        <p class="st-label">具体例</p>
+        <h2 class="st-ja">有料老人ホームの場合、<br>こうなります。</h2>
+      </div>
+    </div>
+    <div class="rev-ex-grid rv">
+      <!-- Image placeholder -->
+      <div class="imgph rev-ex-imgph">
+        <div class="imgph-icon">📷</div>
+        <div class="imgph-label">施設・撮影シーン画像</div>
+        <div class="imgph-size">推奨サイズ: 600 × 420 px</div>
+      </div>
+      <!-- Right: breakdown -->
+      <div class="rev-ex-right">
+        <p class="context">想定シナリオ｜入居者50名規模の有料老人ホーム</p>
+        <p class="title">入居者の日常を映像に。<br>離れた家族へ届けるサービス。</p>
+
+        <div class="ex-service-box">
+          <div>
+            <div class="ex-service-name">日常記録ムービー（4〜6分）</div>
+            <div style="font-size:12px;color:rgba(255,255,255,.35);margin-top:3px">施設内60〜90分撮影・編集・URLリンク納品</div>
+          </div>
+          <div class="ex-service-price en">¥50,000</div>
+        </div>
+
+        <div class="ex-split-rows">
+          <div class="ex-split-row you-row">
+            <div>
+              <div class="ex-row-who">施設様の収益（20%）</div>
+              <div class="ex-row-pct">案内するだけでこの金額があなたへ</div>
+            </div>
+            <div class="ex-row-amt en">¥10,000</div>
+          </div>
+          <div class="ex-split-row filmlink">
+            <div>
+              <div class="ex-row-who" style="color:rgba(255,255,255,.5)">FilmLink（撮影・編集）80%</div>
+            </div>
+            <div class="ex-row-amt en" style="color:rgba(255,255,255,.4);font-size:20px">¥40,000</div>
+          </div>
+        </div>
+
+        <div class="ex-bar"><div class="ex-bar-fill"></div></div>
+
+        <div class="ex-proj-grid rv">
+          <div class="ex-proj-card">
+            <div class="ex-proj-case">月 1 件の場合</div>
+            <div class="ex-proj-monthly en">¥10,000<span style="font-size:13px;color:rgba(255,214,0,.6)">/月</span></div>
+            <div class="ex-proj-annual">年間 ¥120,000</div>
+          </div>
+          <div class="ex-proj-card" style="border-color:rgba(255,214,0,.3);background:rgba(255,214,0,.08)">
+            <div class="ex-proj-case" style="color:var(--y)">月 2 件の場合</div>
+            <div class="ex-proj-monthly en">¥20,000<span style="font-size:13px;color:rgba(255,214,0,.6)">/月</span></div>
+            <div class="ex-proj-annual" style="color:var(--y)">年間 ¥240,000</div>
+          </div>
+          <div class="ex-proj-card">
+            <div class="ex-proj-case">月 5 件の場合</div>
+            <div class="ex-proj-monthly en">¥50,000<span style="font-size:13px;color:rgba(255,214,0,.6)">/月</span></div>
+            <div class="ex-proj-annual">年間 ¥600,000</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════ § 6 REVENUE SIMULATION ════ -->
+<section class="page page--cream pat-cross" id="rev-sim" data-dot="Simulation" style="align-items:flex-start; padding-top:120px; padding-bottom:100px; min-height:100vh;">
+  <div class="container">
+    <div class="st rv">
+      <div class="st-en">SIMULATE</div>
+      <div class="st-body">
+        <p class="st-label">収益シミュレーション</p>
+        <h2 class="st-ja">月にいくらプラスになるか、<br>件数別で見てみましょう。</h2>
+        <p class="st-sub">条件：有料老人ホーム × 日常記録ムービー（販売価格 ¥50,000 / 施設取り分 20% = ¥10,000 / 件）</p>
+      </div>
+    </div>
+
+    <div class="sim-rows rv">
+
+      <div class="sim-row">
+        <div class="sim-left">
+          <div class="sim-case en">per month</div>
+          <div class="sim-count">1<span> 件</span></div>
+          <div class="sim-base">¥10,000 × 1件</div>
+        </div>
+        <div class="sim-center">
+          <div class="sim-bar-outer">
+            <div class="sim-bar-inner" data-width="10" style="width:0"></div>
+          </div>
+          <div class="sim-nums">
+            <div class="sim-num-item">
+              <div class="sim-num-label">月間収益</div>
+              <div class="sim-num-val en">¥10,000</div>
+            </div>
+          </div>
+        </div>
+        <div class="sim-right">
+          <div class="sim-right-annual en">¥120,000</div>
+          <div class="sim-right-label">年間換算</div>
+        </div>
+      </div>
+
+      <div class="sim-row">
+        <div class="sim-left">
+          <div class="sim-case en">per month</div>
+          <div class="sim-count">2<span> 件</span></div>
+          <div class="sim-base">¥10,000 × 2件</div>
+        </div>
+        <div class="sim-center">
+          <div class="sim-bar-outer">
+            <div class="sim-bar-inner" data-width="20" style="width:0"></div>
+          </div>
+          <div class="sim-nums">
+            <div class="sim-num-item">
+              <div class="sim-num-label">月間収益</div>
+              <div class="sim-num-val en">¥20,000</div>
+            </div>
+          </div>
+        </div>
+        <div class="sim-right">
+          <div class="sim-right-annual en">¥240,000</div>
+          <div class="sim-right-label">年間換算</div>
+        </div>
+      </div>
+
+      <div class="sim-row">
+        <div class="sim-left">
+          <div class="sim-case en">per month</div>
+          <div class="sim-count">3<span> 件</span></div>
+          <div class="sim-base">¥10,000 × 3件</div>
+        </div>
+        <div class="sim-center">
+          <div class="sim-bar-outer">
+            <div class="sim-bar-inner" data-width="30" style="width:0"></div>
+          </div>
+          <div class="sim-nums">
+            <div class="sim-num-item">
+              <div class="sim-num-label">月間収益</div>
+              <div class="sim-num-val en">¥30,000</div>
+            </div>
+          </div>
+        </div>
+        <div class="sim-right">
+          <div class="sim-right-annual en">¥360,000</div>
+          <div class="sim-right-label">年間換算</div>
+        </div>
+      </div>
+
+      <div class="sim-row sim-highlight">
+        <div class="sim-left">
+          <div class="sim-case en">per month</div>
+          <div class="sim-count">5<span> 件</span></div>
+          <div class="sim-base">¥10,000 × 5件</div>
+        </div>
+        <div class="sim-center">
+          <div class="sim-bar-outer">
+            <div class="sim-bar-inner" data-width="50" style="width:0"></div>
+          </div>
+          <div class="sim-nums">
+            <div class="sim-num-item">
+              <div class="sim-num-label">月間収益</div>
+              <div class="sim-num-val en">¥50,000</div>
+            </div>
+          </div>
+        </div>
+        <div class="sim-right">
+          <div class="sim-right-annual en">¥600,000</div>
+          <div class="sim-right-label">年間換算</div>
+        </div>
+      </div>
+
+      <div class="sim-row">
+        <div class="sim-left">
+          <div class="sim-case en">per month</div>
+          <div class="sim-count">8<span> 件</span></div>
+          <div class="sim-base">¥10,000 × 8件</div>
+        </div>
+        <div class="sim-center">
+          <div class="sim-bar-outer">
+            <div class="sim-bar-inner" data-width="70" style="width:0"></div>
+          </div>
+          <div class="sim-nums">
+            <div class="sim-num-item">
+              <div class="sim-num-label">月間収益</div>
+              <div class="sim-num-val en">¥80,000</div>
+            </div>
+          </div>
+        </div>
+        <div class="sim-right">
+          <div class="sim-right-annual en">¥960,000</div>
+          <div class="sim-right-label">年間換算</div>
+        </div>
+      </div>
+
+      <div class="sim-row">
+        <div class="sim-left">
+          <div class="sim-case en">per month</div>
+          <div class="sim-count">10<span> 件</span></div>
+          <div class="sim-base">¥10,000 × 10件</div>
+        </div>
+        <div class="sim-center">
+          <div class="sim-bar-outer">
+            <div class="sim-bar-inner" data-width="88" style="width:0"></div>
+          </div>
+          <div class="sim-nums">
+            <div class="sim-num-item">
+              <div class="sim-num-label">月間収益</div>
+              <div class="sim-num-val en">¥100,000</div>
+            </div>
+          </div>
+        </div>
+        <div class="sim-right">
+          <div class="sim-right-annual en">¥1,200,000</div>
+          <div class="sim-right-label">年間換算</div>
+        </div>
+      </div>
+
+    </div>
+
+    <p class="sim-note">
+      ※ 上記は「有料老人ホーム × 日常記録ムービー（¥50,000）」の場合の試算です。<br>
+      ※ プランや業種によって単価は異なります（メッセージムービー ¥25,000〜、ライフストーリー ¥100,000〜）。<br>
+      ※ 費用は完全成果報酬型のため、売れなければ提携先様への請求は一切発生しません。
+    </p>
+  </div>
+</section>
+
+<!-- ════ § 7 CASES ════ -->
+<section class="page page--white" id="cases" data-dot="Cases">
+  <div class="container">
+    <div class="st rv">
+      <div class="st-en">CASES</div>
+      <div class="st-body">
+        <p class="st-label">導入事例 / 活用イメージ</p>
+        <h2 class="st-ja">こんな使い方を<br>しています。</h2>
+        <p class="st-sub">業種を選ばず、お客様との接点をお持ちであれば映像オプションを自然に組み込めます。</p>
+      </div>
+    </div>
+    <div class="cases-layout">
+      <div class="case-card rv">
+        <div class="case-top case-top--care">
+          <div class="case-top-content">
+            <span class="case-badge badge--real">導入事例</span>
+            <div class="case-top-title">有料老人ホームへの<br>映像オプション導入</div>
+          </div>
+        </div>
+        <div class="case-bot">
+          <blockquote class="case-quote">「おじいちゃん、こんなに笑うんだね」——なかなか面会に来られないご家族が、映像を受け取って泣いていたと聞きました。</blockquote>
+          <ul class="case-list">
+            <li>施設で穏やかに過ごす日常・スタッフとの会話をドキュメンタリー調で撮影</li>
+            <li>遠方の家族が「安心できる贈り物」として誕生日・長寿祝いに継続リピート</li>
+            <li>施設側は「案内と日程調整」のみ。業務負担ゼロ</li>
+            <li>「映像オプションがある施設」として他施設との差別化トークに活用</li>
+          </ul>
+          <div class="case-chips">
+            <span class="chip">日常記録ムービー ¥50,000〜</span>
+            <span class="chip">メッセージムービー ¥25,000〜</span>
+            <span class="chip">ライフストーリー ¥100,000〜</span>
+          </div>
+        </div>
+      </div>
+      <div class="case-card rv rv-d1">
+        <div class="case-top case-top--travel">
+          <div class="case-top-content">
+            <span class="case-badge badge--concept">活用イメージ</span>
+            <div class="case-top-title">旅行会社・ツアーとの<br>連携モデル</div>
+          </div>
+        </div>
+        <div class="case-bot">
+          <blockquote class="case-quote">「ただ旅行した記録ではなく、私たちの物語になった」——金婚式旅行のご夫婦が、映像を見て何度も泣いたと話してくれました。</blockquote>
+          <ul class="case-list">
+            <li>景色だけでなく、旅先で交わされる言葉・表情・関係性を映像化</li>
+            <li>家族旅行・記念旅行のお客様にQRコードを渡すだけで完結</li>
+            <li>「旅行会社の付加価値」として口コミ・紹介に直結する体験を提供</li>
+            <li>旅行会社側の撮影・制作対応は一切不要</li>
+          </ul>
+          <div class="case-chips">
+            <span class="chip">旅行記念ムービー ¥35,000〜</span>
+            <span class="chip">家族旅行ドキュメント ¥55,000〜</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════ § 8 INDUSTRIES ════ -->
+<section class="page page--dark pat-dot" id="industries" data-dot="Industry">
+  <div class="container">
+    <div class="st rv">
+      <div class="st-en">INDUSTRY</div>
+      <div class="st-body">
+        <p class="st-label">対象業種</p>
+        <h2 class="st-ja">あなたの業種でも、<br>きっと使えます。</h2>
+        <p class="st-sub">「お客様の大切な瞬間」に立ち会う事業なら、映像オプションは自然に組み込めます。</p>
+      </div>
+    </div>
+    <div class="ind-grid rv">
+      <div class="ind-card">
+        <div class="ind-icon">🏠</div>
+        <div class="ind-name">工務店 / ハウスメーカー</div>
+        <div class="ind-eg">完成引き渡し記念<br>建設ドキュメンタリー</div>
+      </div>
+      <div class="ind-card">
+        <div class="ind-icon">👴</div>
+        <div class="ind-name">介護施設</div>
+        <div class="ind-eg">入居者日常記録<br>ライフストーリー</div>
+      </div>
+      <div class="ind-card">
+        <div class="ind-icon">✈️</div>
+        <div class="ind-name">旅行会社</div>
+        <div class="ind-eg">ツアー思い出ムービー<br>家族旅行ドキュメント</div>
+      </div>
+      <div class="ind-card">
+        <div class="ind-icon">🏋️</div>
+        <div class="ind-name">パーソナルジム</div>
+        <div class="ind-eg">ビフォーアフター記録<br>コース卒業記念</div>
+      </div>
+      <div class="ind-card">
+        <div class="ind-icon">📚</div>
+        <div class="ind-name">学習塾 / スクール</div>
+        <div class="ind-eg">成長記録・卒業ムービー<br>合格記念映像</div>
+      </div>
+      <div class="ind-card">
+        <div class="ind-icon">💒</div>
+        <div class="ind-name">ウエディング関連</div>
+        <div class="ind-eg">前撮りサブムービー<br>ドレス試着記念</div>
+      </div>
+      <div class="ind-card">
+        <div class="ind-icon">🌿</div>
+        <div class="ind-name">サロン / 美容</div>
+        <div class="ind-eg">変化の記録ムービー<br>体験談SNS映像</div>
+      </div>
+      <div class="ind-card ind-card--cta">
+        <div class="ind-icon">💬</div>
+        <div class="ind-name">その他の業種も</div>
+        <div class="ind-eg">まずご相談ください</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════ § 9 FAQ ════ -->
+<section class="page page--white" id="faq" data-dot="FAQ" style="align-items:flex-start; padding-top:120px; padding-bottom:100px;">
+  <div class="container">
+    <div class="st rv">
+      <div class="st-en">FAQ</div>
+      <div class="st-body">
+        <p class="st-label">よくある質問</p>
+        <h2 class="st-ja">「これどうなの？」を<br>まとめました。</h2>
+      </div>
+    </div>
+    <div class="faq-wrap rv" style="max-width:800px">
+      <details>
+        <summary>初期費用はかかりますか？<span class="faq-ico">+</span></summary>
+        <p class="faq-ans">一切かかりません。設備投資・人材確保・月額費用もすべてゼロです。お客様に申し込みが入った時だけ費用が発生し、売上の20%が提携先様の収益、80%がFilmLinkの収益になる成果報酬型のモデルです。</p>
+      </details>
+      <details>
+        <summary>私たちがやることは何ですか？<span class="faq-ico">+</span></summary>
+        <p class="faq-ans">基本的には「お客様への案内」と「撮影日の連絡」のみです。QRコードや案内チラシをお渡しするだけで完結する仕組みを設計します。撮影・編集・納品・修正対応はすべてFilmLinkが対応します。</p>
+      </details>
+      <details>
+        <summary>私たちのブランド名で提供できますか？<span class="faq-ico">+</span></summary>
+        <p class="faq-ans">可能です。「〇〇（貴社名）の映像オプション」として案内していただく形も歓迎しています。FilmLinkを前面に出す必要はなく、貴社サービスの延長として自然に組み込めます。</p>
+      </details>
+      <details>
+        <summary>報酬の受け取り方はどうなりますか？<span class="faq-ico">+</span></summary>
+        <p class="faq-ans">売上が発生した翌月末に、指定口座へ振込でお支払いします。毎月の件数・金額の明細はFilmLinkから送付しますので、管理の手間もかかりません。</p>
+      </details>
+      <details>
+        <summary>契約の縛りや最低件数はありますか？<span class="faq-ico">+</span></summary>
+        <p class="faq-ans">ありません。月間最低件数の縛りや達成できない場合のペナルティも一切ありません。まず試してみて、合わなければいつでも終了していただいて構いません。</p>
+      </details>
+      <details>
+        <summary>導入まで何日かかりますか？<span class="faq-ico">+</span></summary>
+        <p class="faq-ans">ご相談から導入まで最短2週間を目安にしています。業種や規模によって準備内容が変わりますので、まずはお気軽にご相談ください。</p>
+      </details>
+      <details>
+        <summary>撮影者は誰が来ますか？資格はありますか？<span class="faq-ico">+</span></summary>
+        <p class="faq-ans">FilmLinkが手配するプロのカメラマンが伺います。現場の雰囲気・撮影対象者への配慮を重視した経験豊富なスタッフが担当します。介護施設など配慮が必要な現場での撮影経験も持っています。</p>
+      </details>
+    </div>
+  </div>
+</section>
+
+<!-- ════ § 10 CTA / CONTACT ════ -->
+<section class="page page--yellow pat-dot-blk" id="contact" data-dot="Contact">
+  <div class="container">
+    <div class="cta-layout">
+      <div class="cta-left rv">
+        <div style="display:inline-flex;align-items:center;gap:8px;background:var(--y);color:var(--blk);font-size:12px;font-weight:700;padding:6px 14px;border-radius:3px;margin-bottom:20px;letter-spacing:.08em;">
+          ▶ 先着5社限定｜テスト導入パートナー募集中
+        </div>
+        <h2>まずは、<br>15分話しましょう。</h2>
+        <p>現在、一緒に実績を積んでいただけるパートナー事業者様を先着5社で募集しています。「うちの業種に合うか分からない」という方も大歓迎。まずは気軽にお話しましょう。</p>
+        <ul class="cta-checklist">
+          <li>初期費用ゼロ・月額費用ゼロ</li>
+          <li>撮影・編集はすべてFilmLink対応</li>
+          <li>売れた分だけレベニューシェア</li>
+          <li>いつでも終了可能・縛りなし</li>
+          <li>最短2週間で導入スタート</li>
+        </ul>
+      </div>
+      <div class="form-box rv rv-d1">
+        <div class="form-box-title">無料相談フォーム</div>
+        <div class="f-row">
+          <label class="f-label">お名前</label>
+          <input type="text" class="f-input" placeholder="山田 太郎">
+        </div>
+        <div class="f-row">
+          <label class="f-label">会社名 / 屋号</label>
+          <input type="text" class="f-input" placeholder="〇〇株式会社">
+        </div>
+        <div class="f-row">
+          <label class="f-label">業種</label>
+          <select class="f-select">
+            <option value="">選択してください</option>
+            <option>介護施設 / 老人ホーム</option>
+            <option>工務店 / ハウスメーカー</option>
+            <option>パーソナルジム</option>
+            <option>旅行会社</option>
+            <option>学習塾 / スクール</option>
+            <option>ウエディング関連</option>
+            <option>サロン / 美容</option>
+            <option>その他</option>
+          </select>
+        </div>
+        <div class="f-row">
+          <label class="f-label">メールアドレス</label>
+          <input type="email" class="f-input" placeholder="info@example.com">
+        </div>
+        <div class="f-row">
+          <label class="f-label">ご質問・ご要望（任意）</label>
+          <textarea class="f-textarea" placeholder="気になっていること、何でもどうぞ"></textarea>
+        </div>
+        <button class="f-submit">送信する（返信は1営業日以内）</button>
+        <p class="f-note">無料 · しつこい営業なし</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════ Footer ════ -->
+<footer>
+  <a href="#hero" class="footer-logo">Film<span>Link</span></a>
+  <p>© 2026 FilmLink. All rights reserved.</p>
+</footer>
+
+<script>
+(function(){
+
+  // ── Page sections for dot nav ──
+  const sections = Array.from(document.querySelectorAll('[data-dot]'));
+  const dotsWrap = document.getElementById('pageDots');
+
+  sections.forEach((sec, i) => {
+    const d = document.createElement('a');
+    d.className = 'page-dot';
+    d.title = sec.dataset.dot;
+    d.href = '#' + sec.id;
+    dotsWrap.appendChild(d);
+  });
+
+  const dots = Array.from(dotsWrap.querySelectorAll('.page-dot'));
+
+  // Active dot on scroll
+  const ioSec = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        const idx = sections.indexOf(e.target);
+        dots.forEach((d, i) => d.classList.toggle('active', i === idx));
+      }
+    });
+  }, { threshold: 0.4 });
+  sections.forEach(s => ioSec.observe(s));
+
+  // ── Reveal animation ──
+  const reveals = document.querySelectorAll('.rv');
+  const ioRev = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('on');
+        ioRev.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -30px 0px' });
+  reveals.forEach(el => ioRev.observe(el));
+
+  // ── Animate sim bars when visible ──
+  const bars = document.querySelectorAll('.sim-bar-inner');
+  const ioBar = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        const w = e.target.dataset.width;
+        setTimeout(() => { e.target.style.width = w + '%'; }, 200);
+        ioBar.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.3 });
+  bars.forEach(b => ioBar.observe(b));
+
+})();
+</script>
+</body>
+</html>
