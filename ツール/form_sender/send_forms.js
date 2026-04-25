@@ -156,28 +156,48 @@ async function processFacility(browser, facility, index, total) {
   const raw = fs.readFileSync('./facilities.csv', 'utf8');
   const facilities = parse(raw, { columns: true, skip_empty_lines: true });
 
+  // 未処理の施設だけを対象にする（送信済みは自動スキップ）
+  const pending = facilities.filter(f => !f['ステータス'] || f['ステータス'] === '未処理');
+  const dailyLimit = config.settings.daily_limit ?? 999999;
+
   console.log(`\n${'='.repeat(50)}`);
   console.log(`FilmLink フォーム送信ツール`);
   console.log(`モード: ${DRY_RUN ? 'ドライラン（送信なし）' : '全自動送信'}`);
-  console.log(`対象: ${facilities.length}件`);
+  console.log(`未処理件数: ${pending.length}件 / 本日の上限: ${dailyLimit}件`);
   console.log(`${'='.repeat(50)}\n`);
 
   const browser = await chromium.launch({ headless: false });
   const results = [];
+  let sentCount = 0;
 
   try {
-    for (let i = 0; i < facilities.length; i++) {
-      const result = await processFacility(browser, facilities[i], i, facilities.length);
+    for (let i = 0; i < pending.length; i++) {
+      // 1日の上限に達したら停止
+      if (!DRY_RUN && sentCount >= dailyLimit) {
+        console.log(`\n本日の送信上限（${dailyLimit}件）に達しました。残り${pending.length - i}件は明日以降に送信されます。`);
+        break;
+      }
+
+      const result = await processFacility(browser, pending[i], i, pending.length);
       results.push(result);
 
-      // 件数ログを随時保存（途中で止まっても記録が残る）
+      // 送信成功したらfacilities.csvのステータスを「送信済み」に更新
+      if (result['送信結果'] === '送信完了') {
+        const idx = facilities.findIndex(f => f['No.'] === pending[i]['No.']);
+        if (idx !== -1) facilities[idx]['ステータス'] = '送信済み';
+        sentCount++;
+        // 更新したfacilities.csvを即保存（途中で止まっても記録が残る）
+        fs.writeFileSync('./facilities.csv', stringify(facilities, { header: true }));
+      }
+
+      // 送信ログを随時保存
       fs.writeFileSync(
         config.settings.log_file,
         stringify(results, { header: true })
       );
 
-      // 施設間のウェイト（最後の1件はスキップ）
-      if (!DRY_RUN && i < facilities.length - 1) {
+      // 施設間のウェイト（上限未達かつ最後でない場合のみ）
+      if (!DRY_RUN && i < pending.length - 1 && sentCount < dailyLimit) {
         await new Promise(r => setTimeout(r, config.settings.delay_between_sites_ms));
       }
     }
@@ -190,6 +210,7 @@ async function processFacility(browser, facility, index, total) {
   const dry = results.filter(r => r['送信結果'].includes('ドライラン')).length;
   const ng  = results.filter(r => ['エラー','送信ボタン未発見'].includes(r['送信結果'])).length;
   const skipped = results.filter(r => r['送信結果'].includes('スキップ')).length;
+  const remaining = pending.length - results.length;
 
   console.log(`\n${'='.repeat(50)}`);
   console.log(`完了サマリー`);
@@ -200,6 +221,7 @@ async function processFacility(browser, facility, index, total) {
     console.log(`  エラー:   ${ng}件`);
   }
   console.log(`  スキップ: ${skipped}件（URL未設定）`);
+  if (remaining > 0) console.log(`  未送信（明日以降）: ${remaining}件`);
   console.log(`  結果ファイル: ${config.settings.log_file}`);
   console.log(`${'='.repeat(50)}\n`);
 })();
