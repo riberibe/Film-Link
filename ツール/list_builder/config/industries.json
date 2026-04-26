@@ -1,0 +1,26 @@
+{
+  "結婚式場": {
+    "google_maps_query": "結婚式場 ウエディング",
+    "directory_sites": [
+      {
+        "name": "みんなのウエディング",
+        "base_url": "https://www.minna-wedding.co.jp/wedding_hall/search/",
+        "area_query_param": "pref_name"
+      }
+    ]
+  },
+  "写真スタジオ": {
+    "google_maps_query": "写真スタジオ 撮影",
+    "directory_sites": []
+  },
+  "有料老人ホーム": {
+    "google_maps_query": "有料老人ホーム 介護施設",
+    "directory_sites": [
+      {
+        "name": "みんなの介護",
+        "base_url": "https://www.minnanokaigo.com/search/",
+        "area_query_param": "area"
+      }
+    ]
+  }
+}
