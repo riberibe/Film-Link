@@ -15,6 +15,25 @@ const { stringify } = require('csv-stringify/sync');
 const config = JSON.parse(fs.readFileSync('./config.json', 'utf8'));
 const DRY_RUN = process.argv.includes('--dry');
 
+// キャンペーンモード引数
+const _args = process.argv.slice(2);
+const CAMPAIGN = (() => { const i = _args.indexOf('--campaign'); return i !== -1 ? _args[i + 1] : null; })();
+const SAMPLE_N = (() => { const i = _args.indexOf('--sample');   return i !== -1 ? parseInt(_args[i + 1]) || 3 : null; })();
+
+// キャンペーンの message.txt があれば件名・本文を上書き
+if (CAMPAIGN) {
+  const msgPath = path.join(CAMPAIGN, 'message.txt');
+  if (fs.existsSync(msgPath)) {
+    const lines = fs.readFileSync(msgPath, 'utf8').trim().split('\n');
+    const subjLine = lines.find(l => l.startsWith('件名:'));
+    if (subjLine) {
+      config.message.subject = subjLine.replace(/^件名:\s*/, '').trim();
+      const subjIdx = lines.indexOf(subjLine);
+      config.message.body = lines.slice(subjIdx + 2).join('\n').trim();
+    }
+  }
+}
+
 // フォームフィールドのキーワードマップ
 const FIELD_MAP = {
   name:        ['name', 'your-name', 'お名前', '氏名', 'fullname', 'full_name', 'contact_name', 'shimei',
@@ -206,6 +225,22 @@ async function fillAndSubmit(page) {
   return { result: '送信完了', filled };
 }
 
+// SHODAN Pro形式 → 内部形式に正規化
+function normalizeFacility(row, index) {
+  if (row['フォームURL'] !== undefined) return row; // 既に内部形式
+  return {
+    'No.':      String(index + 1).padStart(4, '0'),
+    '施設名':   row['会社名']              || '',
+    '業種':     row['業界']               || '',
+    '都道府県': '',
+    '市区町村': row['本社住所']            || '',
+    '月額費用': '',
+    'HP_URL':   '',
+    'フォームURL': row['お問い合わせフォーム'] || '',
+    'ステータス': '',
+  };
+}
+
 async function processFacility(browser, facility, index, total) {
   const row = { ...facility, 送信結果: '', エラー詳細: '' };
 
@@ -268,17 +303,39 @@ async function processFacility(browser, facility, index, total) {
 }
 
 (async () => {
-  const raw = fs.readFileSync('./facilities.csv', 'utf8');
-  const facilities = parse(raw, { columns: true, skip_empty_lines: true });
+  // パス解決
+  const csvPath     = CAMPAIGN ? path.join(CAMPAIGN, 'alive.csv')   : './facilities.csv';
+  const resultsPath = CAMPAIGN ? path.join(CAMPAIGN, 'results.csv') : config.settings.log_file;
 
-  // 未処理の施設だけを対象にする（送信済みは自動スキップ）
-  const pending = facilities.filter(f => !f['ステータス'] || f['ステータス'] === '未処理');
+  const raw = fs.readFileSync(csvPath, 'utf8');
+  const rawRows = parse(raw, { columns: true, skip_empty_lines: true });
+  const facilities = rawRows.map((r, i) => normalizeFacility(r, i));
+
+  // 未処理だけ対象（送信済みは自動スキップ）
+  // キャンペーンモードでは results.csv の送信済みURLを除外
+  let sentUrls = new Set();
+  if (CAMPAIGN && fs.existsSync(resultsPath)) {
+    const prevResults = parse(fs.readFileSync(resultsPath, 'utf8'), { columns: true, skip_empty_lines: true });
+    prevResults.filter(r => r['送信結果'] === '送信完了').forEach(r => sentUrls.add(r['フォームURL']));
+  }
+
+  const pending = facilities.filter(f =>
+    (!f['ステータス'] || f['ステータス'] === '未処理') &&
+    !sentUrls.has(f['フォームURL'])
+  );
+
   const dailyLimit = config.settings.daily_limit ?? 999999;
+  const target = SAMPLE_N ? pending.slice(0, SAMPLE_N) : pending;
+
+  const modeLabel = DRY_RUN ? 'ドライラン（送信なし）'
+                 : SAMPLE_N ? `サンプル送信 ${SAMPLE_N}件`
+                 :            '全件送信';
 
   console.log(`\n${'='.repeat(50)}`);
   console.log(`FilmLink フォーム送信ツール`);
-  console.log(`モード: ${DRY_RUN ? 'ドライラン（送信なし）' : '全自動送信'}`);
-  console.log(`未処理件数: ${pending.length}件 / 本日の上限: ${dailyLimit}件`);
+  console.log(`モード      : ${modeLabel}`);
+  console.log(`キャンペーン: ${CAMPAIGN || '旧来モード（facilities.csv）'}`);
+  console.log(`対象件数    : ${target.length}件 / 本日の上限: ${dailyLimit}件`);
   console.log(`${'='.repeat(50)}\n`);
 
   const browser = await chromium.launch({ headless: false });
@@ -286,33 +343,24 @@ async function processFacility(browser, facility, index, total) {
   let sentCount = 0;
 
   try {
-    for (let i = 0; i < pending.length; i++) {
-      // 1日の上限に達したら停止
+    for (let i = 0; i < target.length; i++) {
       if (!DRY_RUN && sentCount >= dailyLimit) {
-        console.log(`\n本日の送信上限（${dailyLimit}件）に達しました。残り${pending.length - i}件は明日以降に送信されます。`);
+        console.log(`\n本日の送信上限（${dailyLimit}件）に達しました。`);
         break;
       }
 
-      const result = await processFacility(browser, pending[i], i, pending.length);
+      const result = await processFacility(browser, target[i], i, target.length);
       results.push(result);
 
-      // 送信成功したらfacilities.csvのステータスを「送信済み」に更新
-      if (result['送信結果'] === '送信完了') {
-        const idx = facilities.findIndex(f => f['No.'] === pending[i]['No.']);
-        if (idx !== -1) facilities[idx]['ステータス'] = '送信済み';
-        sentCount++;
-        // 更新したfacilities.csvを即保存（途中で止まっても記録が残る）
-        fs.writeFileSync('./facilities.csv', stringify(facilities, { header: true }));
-      }
+      if (result['送信結果'] === '送信完了') sentCount++;
 
-      // 送信ログを随時保存
-      fs.writeFileSync(
-        config.settings.log_file,
-        stringify(results, { header: true })
-      );
+      // 結果を随時保存（途中停止でも記録が残る）
+      const existing = fs.existsSync(resultsPath)
+        ? parse(fs.readFileSync(resultsPath, 'utf8'), { columns: true, skip_empty_lines: true })
+        : [];
+      fs.writeFileSync(resultsPath, stringify([...existing, result], { header: existing.length === 0 }));
 
-      // 施設間のウェイト（上限未達かつ最後でない場合のみ）
-      if (!DRY_RUN && i < pending.length - 1 && sentCount < dailyLimit) {
+      if (!DRY_RUN && i < target.length - 1 && sentCount < dailyLimit) {
         await new Promise(r => setTimeout(r, config.settings.delay_between_sites_ms));
       }
     }
@@ -320,12 +368,10 @@ async function processFacility(browser, facility, index, total) {
     await browser.close();
   }
 
-  // サマリー表示
-  const ok  = results.filter(r => r['送信結果'] === '送信完了').length;
-  const dry = results.filter(r => r['送信結果'].includes('ドライラン')).length;
-  const ng  = results.filter(r => ['エラー','送信ボタン未発見'].includes(r['送信結果'])).length;
+  const ok      = results.filter(r => r['送信結果'] === '送信完了').length;
+  const dry     = results.filter(r => r['送信結果'].includes('ドライラン')).length;
+  const ng      = results.filter(r => ['エラー','送信ボタン未発見'].includes(r['送信結果'])).length;
   const skipped = results.filter(r => r['送信結果'].includes('スキップ')).length;
-  const remaining = pending.length - results.length;
 
   console.log(`\n${'='.repeat(50)}`);
   console.log(`完了サマリー`);
@@ -336,7 +382,6 @@ async function processFacility(browser, facility, index, total) {
     console.log(`  エラー:   ${ng}件`);
   }
   console.log(`  スキップ: ${skipped}件（URL未設定）`);
-  if (remaining > 0) console.log(`  未送信（明日以降）: ${remaining}件`);
-  console.log(`  結果ファイル: ${config.settings.log_file}`);
+  console.log(`  結果ファイル: ${resultsPath}`);
   console.log(`${'='.repeat(50)}\n`);
 })();
