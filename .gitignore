@@ -14,3 +14,9 @@ shodan_*.csv
 
 # スクレイパーが生成するデータ（ローカルでのみ管理）
 facilities_*.csv
+
+# キャンペーンデータ（生成物・送信結果はローカル管理）
+**/campaigns/*/alive.csv
+**/campaigns/*/ng.csv
+**/campaigns/*/results.csv
+**/campaigns/*/raw*.csv
