@@ -1,6 +1,7 @@
 const CHAIN_PATTERNS = require('./chain_patterns');
 
-// 施設名とHP_URLをもとにフォームURLとステータスを決定する
+// 施設名とHP_URLをもとにフォームURL/HP URL/ステータスを決定する
+// hpUrl がチェーン側で定義されていれば、それを HP_URL としても返す
 function resolveFormUrl(name, hpUrl) {
   const searchStr = `${name} ${hpUrl || ''}`.toLowerCase();
 
@@ -9,13 +10,14 @@ function resolveFormUrl(name, hpUrl) {
     if (matched) {
       return {
         formUrl: chain.formUrl ?? hpUrl ?? '',
+        hpUrl: chain.hpUrl ?? hpUrl ?? '',
         status: chain.status ?? '未処理',
+        chainHit: true,
       };
     }
   }
 
-  // パターン未一致 → HP_URLをそのままセット（send_forms.js の findContactUrl が自動探索）
-  return { formUrl: hpUrl || '', status: '未処理' };
+  return { formUrl: hpUrl || '', hpUrl: hpUrl || '', status: '未処理', chainHit: false };
 }
 
 module.exports = { resolveFormUrl };

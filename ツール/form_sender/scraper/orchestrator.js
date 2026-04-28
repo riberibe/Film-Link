@@ -100,14 +100,21 @@ class Orchestrator {
             if (this.csv.isDuplicate(detail.name, detail.hpUrl)) {
               this.stats.skipped++;
             } else {
-              const { formUrl, status } = resolveFormUrl(detail.name, detail.hpUrl);
+              // チェーン専用フォームを優先（同チェーンは確実な専用URLがあるため）
+              // チェーン未一致 → アダプターが検出したフォームURL/HPを採用
+              const chain = resolveFormUrl(detail.name, detail.hpUrl);
+              const chainHit = chain.chainHit;
+              const formUrl = chainHit ? (chain.formUrl || '') : (detail.formUrl || '');
+              const hpUrl   = chainHit ? (chain.hpUrl   || detail.hpUrl || '') : (detail.hpUrl || '');
+              const status  = chainHit ? chain.status        : (detail.status  || (formUrl ? '未処理' : 'フォーム未検出'));
+
               const record = {
                 '施設名': detail.name,
                 '業種': this.industry,
                 '都道府県': detail.pref || '',
                 '市区町村': detail.city || '',
                 '月額費用': detail.cost || '',
-                'HP_URL': detail.hpUrl || '',
+                'HP_URL': hpUrl,
                 'フォームURL': formUrl,
                 'ステータス': status,
               };
