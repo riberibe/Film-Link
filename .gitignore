@@ -4,3 +4,10 @@ screenshots/
 results.csv
 .enrich_progress.json
 scraper_debug_*.png
+
+# macOS
+.DS_Store
+
+# 大容量の取り込みデータ（SHODAN PRO等のCSVソース）
+*.csv.csv
+shodan_*.csv
