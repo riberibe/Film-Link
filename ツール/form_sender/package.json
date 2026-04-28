@@ -8,8 +8,9 @@
     "preview": "node send_forms.js --preview"
   },
   "dependencies": {
-    "playwright": "^1.43.0",
     "csv-parse": "^5.5.3",
-    "csv-stringify": "^6.4.6"
+    "csv-stringify": "^6.4.6",
+    "googleapis": "^171.4.0",
+    "playwright": "^1.43.0"
   }
 }

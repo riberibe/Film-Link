@@ -1,8 +1,12 @@
 {
   "sender": {
     "name": "小林",
+    "company": "FilmLink",
     "email": "cv.contact000@gmail.com",
-    "phone": "080-4687-3729"
+    "phone": "080-4687-3729",
+    "fax": "080-4687-3729",
+    "postal_code": "",
+    "address": ""
   },
   "message": {
     "subject": "ご入居者様からご家族への「映像メッセージ」オプション — FilmLinkよりご提案",
@@ -12,6 +16,12 @@
     "daily_limit": 50,
     "delay_between_sites_ms": 5000,
     "screenshot_dir": "./screenshots",
+    "screenshot_mode": "errors_only",
     "log_file": "./results.csv"
+  },
+  "google": {
+    "credentials_path": "/Users/ribetyan/Desktop/リベ恋愛/scripts/credentials.json",
+    "token_path": "/Users/ribetyan/.mcp-google-sheets-token.json",
+    "spreadsheet_id": "19vyVMkO2BsgNLH_ECjwYZ4esbS8Bq63nYYFWhf3oxX4"
   }
 }

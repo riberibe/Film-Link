@@ -17,12 +17,17 @@ const DRY_RUN = process.argv.includes('--dry');
 
 // フォームフィールドのキーワードマップ
 const FIELD_MAP = {
-  name:    ['name', 'your-name', 'お名前', '氏名', 'fullname', 'full_name', 'contact_name', 'shimei'],
-  email:   ['email', 'mail', 'your-email', 'メール', 'email_address'],
-  phone:   ['tel', 'phone', 'telephone', '電話', '電話番号', 'denwabangou'],
-  subject: ['subject', '件名', 'title', 'お問い合わせ件名', 'kenmei'],
-  body:    ['message', 'body', '本文', 'content', 'inquiry', 'お問い合わせ内容', 'text', 'naiyou', 'memo'],
-  company: ['company', '会社名', '施設名', 'organization', 'kaishame'],
+  name:        ['name', 'your-name', 'お名前', '氏名', 'fullname', 'full_name', 'contact_name', 'shimei',
+                 'sei', 'mei', 'first_name', 'last_name', 'firstname', 'lastname', 'onamae'],
+  email:       ['email', 'mail', 'your-email', 'メール', 'email_address', 'e-mail'],
+  phone:       ['tel', 'phone', 'telephone', '電話', '電話番号', 'denwabangou', 'phonenumber'],
+  fax:         ['fax', 'ファックス', 'facsimile', 'fax_number', 'faxbangou'],
+  subject:     ['subject', '件名', 'title', 'お問い合わせ件名', 'kenmei'],
+  body:        ['message', 'body', '本文', 'content', 'inquiry', 'お問い合わせ内容', 'text', 'naiyou', 'memo',
+                 'description', 'details', 'comment', 'ご要望', 'toiawase', 'otoiawase', 'your-message'],
+  company:     ['company', '会社名', 'organization', 'kaishame', '組織名', 'corp', 'houjin'],
+  postal_code: ['postal', 'zip', '郵便番号', 'yuubin', 'postcode', 'post_code'],
+  address:     ['address', '住所', 'juusho', 'addr'],
 };
 
 function matchField(attrs) {
@@ -31,6 +36,38 @@ function matchField(attrs) {
     if (keywords.some(k => key.includes(k))) return type;
   }
   return null;
+}
+
+// 中間ページ（カテゴリ選択ページ等）を突破してフォームページへ進む
+// ボタンをクリックしてもフォーム入力欄がなければ元のURLに戻って次を試す
+async function tryClickThroughIntermediatePage(page) {
+  const currentUrl = page.url();
+  // JSレンダリング待ち（React/Vue系のページ対応）
+  await page.waitForTimeout(2500);
+  const priorities = [
+    /法人|事業者|企業|ビジネス/i,
+    /一般/i,
+    /その他|other/i,
+  ];
+  const elements = await page.$$('a, button').catch(() => []);
+  for (const pattern of priorities) {
+    for (const el of elements) {
+      const text = await el.evaluate(e => e.textContent.trim()).catch(() => '');
+      if (pattern.test(text)) {
+        try {
+          await el.click();
+          await page.waitForLoadState('networkidle', { timeout: 15000 });
+          const hasVisibleInputs = await page.$$eval(
+            'input[type="text"], input[type="email"], input[type="tel"], textarea',
+            els => els.some(el => el.offsetParent !== null)
+          ).catch(() => false);
+          if (hasVisibleInputs) return true;
+          await page.goto(currentUrl, { waitUntil: 'domcontentloaded', timeout: 10000 });
+        } catch (_) {}
+      }
+    }
+  }
+  return false;
 }
 
 async function findContactUrl(page, baseUrl) {
@@ -53,7 +90,7 @@ async function findContactUrl(page, baseUrl) {
   return null;
 }
 
-async function fillAndSubmit(page, facility) {
+async function fillAndSubmit(page) {
   const inputs = await page.$$('input, textarea, select');
   const filled = {};
 
@@ -66,34 +103,92 @@ async function fillAndSubmit(page, facility) {
       placeholder: (el.placeholder || '').toLowerCase(),
     }));
 
-    if (['hidden', 'submit', 'button', 'checkbox', 'radio'].includes(attrs.type)) continue;
+    if (['hidden', 'submit', 'button'].includes(attrs.type)) continue;
+
+    // プライバシーポリシー・利用規約への同意チェックボックスを自動チェック
+    if (attrs.type === 'checkbox') {
+      const context = await input.evaluate(el => {
+        const label = [...(el.labels || [])].map(l => l.textContent).join('');
+        const wrap  = el.closest('label')?.textContent || '';
+        return (label + wrap + el.name + el.id).toLowerCase();
+      }).catch(() => '');
+      if (/プライバシー|個人情報|利用規約|同意|privacy|agree|terms/i.test(context)) {
+        await input.check().catch(() => {});
+      }
+      continue;
+    }
+
+    // ドロップダウン（問い合わせ種別など）は「その他」を優先選択
+    if (attrs.tag === 'select') {
+      if (filled['_select']) continue;
+      const options = await input.$$eval('option', opts =>
+        opts.map(o => ({ value: o.value, text: o.textContent.trim() })).filter(o => o.value)
+      );
+      const other = options.find(o => /その他|other|ご相談|問い合わせ|inquiry/i.test(o.text));
+      const target = other || options[options.length - 1];
+      if (target) {
+        await input.selectOption(target.value).catch(() => {});
+        filled['_select'] = true;
+      }
+      continue;
+    }
 
     const fieldType = matchField(attrs);
     if (!fieldType || filled[fieldType]) continue;
 
     const value = {
-      name:    config.sender.name,
-      email:   config.sender.email,
-      phone:   config.sender.phone,
-      subject: config.message.subject,
-      body:    config.message.body,
-      company: '個人',
+      name:        config.sender.name,
+      email:       config.sender.email,
+      phone:       config.sender.phone,
+      fax:         config.sender.fax,
+      subject:     config.message.subject,
+      body:        config.message.body,
+      company:     config.sender.company,
+      postal_code: config.sender.postal_code || '',
+      address:     config.sender.address || '',
     }[fieldType];
 
-    if (value) {
+    if (value !== undefined) {
       await input.fill(value).catch(() => {});
-      filled[fieldType] = true;
+      if (value) filled[fieldType] = true;
     }
   }
 
-  // スクリーンショット保存（送信前の状態を記録）
-  const dir = config.settings.screenshot_dir;
-  if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
-  const filename = path.join(dir, `${facility['No.'].padStart(3,'0')}_${facility['施設名'].replace(/[\s/]/g,'_')}.png`);
-  await page.screenshot({ path: filename, fullPage: true });
+  // 多段式フォーム対応: セレクト選択後に入力欄が動的に出現するタイプ（ツクイ等）
+  if (filled['_select'] && !filled['name'] && !filled['email']) {
+    await page.waitForTimeout(2000);
+    const newInputs = await page.$$('input, textarea');
+    for (const input of newInputs) {
+      const attrs = await input.evaluate(el => ({
+        name:        (el.name || '').toLowerCase(),
+        id:          (el.id || '').toLowerCase(),
+        type:        (el.type || '').toLowerCase(),
+        tag:         el.tagName.toLowerCase(),
+        placeholder: (el.placeholder || '').toLowerCase(),
+      }));
+      if (['hidden', 'submit', 'button', 'checkbox', 'radio'].includes(attrs.type)) continue;
+      const fieldType = matchField(attrs);
+      if (!fieldType || filled[fieldType]) continue;
+      const value = {
+        name:        config.sender.name,
+        email:       config.sender.email,
+        phone:       config.sender.phone,
+        fax:         config.sender.fax,
+        subject:     config.message.subject,
+        body:        config.message.body,
+        company:     config.sender.company,
+        postal_code: config.sender.postal_code || '',
+        address:     config.sender.address || '',
+      }[fieldType];
+      if (value !== undefined) {
+        await input.fill(value).catch(() => {});
+        if (value) filled[fieldType] = true;
+      }
+    }
+  }
 
   if (DRY_RUN) {
-    return { result: 'ドライラン（送信なし）', screenshot: filename, filled };
+    return { result: 'ドライラン（送信なし）', filled };
   }
 
   // 送信ボタンを探してクリック
@@ -103,12 +198,12 @@ async function fillAndSubmit(page, facility) {
     'button:has-text("Submit"), button:has-text("送る")'
   );
 
-  if (!submitBtn) return { result: '送信ボタン未発見', screenshot: filename, filled };
+  if (!submitBtn) return { result: '送信ボタン未発見', filled };
 
   await submitBtn.click();
   await page.waitForLoadState('networkidle', { timeout: 10000 }).catch(() => {});
 
-  return { result: '送信完了', screenshot: filename, filled };
+  return { result: '送信完了', filled };
 }
 
 async function processFacility(browser, facility, index, total) {
@@ -125,25 +220,45 @@ async function processFacility(browser, facility, index, total) {
     console.log(`[${index+1}/${total}] ${facility['施設名']}`);
     await page.goto(facility['フォームURL'], { waitUntil: 'domcontentloaded', timeout: 15000 });
 
-    // フォームが見つからない場合はトップページからコンタクトページを探す
-    const hasForm = await page.$('form');
-    if (!hasForm && facility['HP_URL']) {
-      const contactUrl = await findContactUrl(page, facility['HP_URL']);
-      if (contactUrl) {
-        await page.goto(contactUrl, { waitUntil: 'domcontentloaded', timeout: 15000 });
+    // 可視のフォーム入力欄チェック（JS描画待ちのため最大2回試行）
+    const checkInputs = () => page.$$eval(
+      'input[type="text"], input[type="email"], input[type="tel"], textarea',
+      els => els.some(el => el.offsetParent !== null)
+    ).catch(() => false);
+
+    let hasVisibleInputs = await checkInputs();
+    if (!hasVisibleInputs) {
+      await page.waitForTimeout(3000);
+      hasVisibleInputs = await checkInputs();
+    }
+
+    // 可視入力欄がなければ: ①中間ページ突破 → ②トップからコンタクトURL探索
+    if (!hasVisibleInputs) {
+      const clicked = await tryClickThroughIntermediatePage(page);
+      if (!clicked && facility['HP_URL']) {
+        const contactUrl = await findContactUrl(page, facility['HP_URL']);
+        if (contactUrl) {
+          await page.goto(contactUrl, { waitUntil: 'domcontentloaded', timeout: 15000 });
+        }
       }
     }
 
-    const { result, screenshot, filled } = await fillAndSubmit(page, facility);
+    const { result, filled } = await fillAndSubmit(page);
 
     row['送信結果'] = result;
-    row['フォームURL'] = facility['フォームURL'];
     console.log(`  → ${result}（入力: ${Object.keys(filled).join(', ')}）`);
 
   } catch (err) {
     const msg = err.message.split('\n')[0];
     row['送信結果'] = 'エラー';
     row['エラー詳細'] = msg;
+    // エラー時のみスクリーンショット保存
+    if ((config.settings.screenshot_mode || 'errors_only') !== 'none') {
+      const dir = config.settings.screenshot_dir;
+      if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+      const fname = path.join(dir, `ERR_${facility['No.'].padStart(3,'0')}_${facility['施設名'].replace(/[\s/]/g,'_')}.png`);
+      await page.screenshot({ path: fname }).catch(() => {});
+    }
     console.log(`  → エラー: ${msg}`);
   } finally {
     await page.close();

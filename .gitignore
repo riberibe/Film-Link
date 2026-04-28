@@ -3,3 +3,4 @@ node_modules/
 screenshots/
 results.csv
 .enrich_progress.json
+scraper_debug_*.png
