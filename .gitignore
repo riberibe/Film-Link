@@ -11,3 +11,6 @@ scraper_debug_*.png
 # 大容量の取り込みデータ（SHODAN PRO等のCSVソース）
 *.csv.csv
 shodan_*.csv
+
+# スクレイパーが生成するデータ（ローカルでのみ管理）
+facilities_*.csv
