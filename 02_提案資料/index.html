@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>FilmLink — あなたのサービスに、映像を足しませんか。</title>
-  <meta name="description" content="既存事業に映像オプションを足すだけ。初期費用ゼロ・在庫ゼロ・撮影編集すべておまかせ。売れた分だけレベニューシェアで収益化できる新しい提携モデルです。">
+  <title>FilmLink — 貴社のサービスに、新しい"価値"を。</title>
+  <meta name="description" content="既存事業者様の体験価値を、映像で一段引き上げる提携モデル。撮影・編集・納品はすべてFilmLink。完全成果報酬型・リスクゼロ。他社にない付加価値・差別化を一緒に創り出します。">
   <meta name="theme-color" content="#FFD600">
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%230D0D0D'/%3E%3Ctext x='50%25' y='54%25' text-anchor='middle' dominant-baseline='middle' font-family='Quicksand,sans-serif' font-weight='700' font-size='28' fill='%23FFD600'%3EFL%3C/text%3E%3C/svg%3E">
 
@@ -14,14 +14,14 @@
   <!-- OGP / Twitter Card -->
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://film-links.com/">
-  <meta property="og:title" content="FilmLink — あなたのサービスに、映像を足しませんか。">
-  <meta property="og:description" content="既存事業に映像オプションを足すだけ。初期費用ゼロ・売れた分だけレベニューシェア。先着5社限定でテスト導入パートナー募集中。">
+  <meta property="og:title" content="FilmLink — 貴社のサービスに、新しい"価値"を。">
+  <meta property="og:description" content="既存事業者様の体験価値を、映像で一段引き上げる提携モデル。撮影・編集・納品はすべてFilmLink。完全成果報酬型・リスクゼロで、貴社サービスの付加価値を一緒に創り出します。">
   <meta property="og:site_name" content="FilmLink">
   <meta property="og:locale" content="ja_JP">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:url" content="https://film-links.com/">
-  <meta name="twitter:title" content="FilmLink — あなたのサービスに、映像を足しませんか。">
-  <meta name="twitter:description" content="既存事業に映像オプションを足すだけ。初期費用ゼロ・売れた分だけレベニューシェア。">
+  <meta name="twitter:title" content="FilmLink — 貴社のサービスに、新しい"価値"を。">
+  <meta name="twitter:description" content="既存事業者様の体験価値を、映像で一段引き上げる提携モデル。撮影・編集・納品はすべてFilmLink。完全成果報酬型・リスクゼロ。">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;600;700&family=Noto+Sans+JP:wght@300;400;500;700;900&display=swap" rel="stylesheet">
@@ -326,7 +326,7 @@
     @media (max-width: 768px) { .nav-links { display: none; } }
 
     /* ══════════════════════════════════════════
-       § 1  HERO
+       § 1  HERO (斜めスプリット型)
     ══════════════════════════════════════════ */
     #hero {
       min-height: 100vh;
@@ -337,22 +337,66 @@
       overflow: hidden;
       padding: 100px 0 80px;
     }
+    /* 右半分：画像領域（斜めクリップ） */
+    .hero-image {
+      position: absolute;
+      top: 0; right: 0; bottom: 0;
+      width: 58%;
+      clip-path: polygon(18% 0, 100% 0, 100% 100%, 0 100%);
+      background:
+        linear-gradient(135deg, rgba(13,13,13,.55), rgba(13,13,13,.15) 40%, transparent 70%),
+        radial-gradient(ellipse 60% 50% at 70% 40%, rgba(255,214,0,.12), transparent 70%),
+        url(../lp_materials/01_hero_bg_1777542748187.png) center/cover no-repeat;
+      z-index: 0;
+    }
+    .hero-image::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 75% 35%, rgba(255,214,0,.22) 0, transparent 55%),
+        linear-gradient(180deg, transparent 60%, rgba(13,13,13,.85));
+    }
+    .hero-image::after { content: none; }
+    /* 斜めの黄色アクセントライン */
+    .hero-image-line {
+      position: absolute;
+      top: -10%;
+      left: 18%;
+      width: 2px;
+      height: 120%;
+      background: linear-gradient(180deg, transparent, var(--y), transparent);
+      transform: rotate(8deg);
+      transform-origin: top center;
+      opacity: .6;
+      z-index: 1;
+    }
     #hero::before {
       content: '';
       position: absolute;
       inset: 0;
-      background-image: radial-gradient(circle, rgba(255,214,0,.2) 1.5px, transparent 1.5px);
+      background-image: radial-gradient(circle, rgba(255,214,0,.16) 1.2px, transparent 1.2px);
       background-size: 36px 36px;
+      z-index: 0;
     }
     #hero::after {
       content: '';
       position: absolute;
       inset: 0;
-      background:
-        radial-gradient(ellipse 55% 60% at 75% 45%, rgba(255,214,0,.09) 0%, transparent 70%),
-        linear-gradient(to bottom, transparent 40%, rgba(14,14,14,.7) 100%);
+      background: linear-gradient(to bottom, transparent 40%, rgba(14,14,14,.5) 100%);
+      pointer-events: none;
+      z-index: 0;
     }
-    .hero-z { position: relative; z-index: 1; }
+    .hero-z {
+      position: relative;
+      z-index: 2;
+      max-width: 580px;
+    }
+    @media (max-width: 900px) {
+      .hero-image { width: 100%; clip-path: none; opacity: .35; }
+      .hero-image-line { display: none; }
+      .hero-z { max-width: 100%; }
+    }
     .hero-kicker {
       display: inline-flex;
       align-items: center;
@@ -409,22 +453,76 @@
     .pill::before { content: '✓'; color: var(--y); font-weight: 700; font-size: 11px; }
 
     /* ══════════════════════════════════════════
-       § 2  CONCEPT
+       § 2  CONCEPT (右側2/3斜め画像枠)
     ══════════════════════════════════════════ */
+    #concept { position: relative; overflow: hidden; }
+    .concept-image {
+      position: absolute;
+      top: 0; right: 0; bottom: 0;
+      width: 66%;
+      clip-path: polygon(28% 0, 100% 0, 100% 100%, 0 100%);
+      background:
+        linear-gradient(135deg, rgba(245,242,235,.25), transparent 60%),
+        radial-gradient(ellipse 50% 60% at 75% 50%, rgba(255,214,0,.12), transparent 70%),
+        url(../lp_materials/02_concept_bg_1777542765025.png) center/cover no-repeat;
+      z-index: 0;
+      opacity: .9;
+    }
+    .concept-image::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 80% 30%, rgba(255,214,0,.18), transparent 55%);
+    }
+    .concept-image::after { content: none; }
+    .concept-image-line {
+      position: absolute;
+      top: -10%;
+      left: 28%;
+      width: 2px;
+      height: 120%;
+      background: linear-gradient(180deg, transparent, var(--y-dk), transparent);
+      transform: rotate(11deg);
+      transform-origin: top center;
+      opacity: .55;
+      z-index: 1;
+    }
+    #concept .container { position: relative; z-index: 2; }
+    #concept .st { max-width: 560px; }
+    .concept-grid-wrap {
+      max-width: 560px;
+      background: rgba(255,255,255,.92);
+      backdrop-filter: blur(6px);
+      border-radius: 12px;
+      padding: 8px;
+      border: 1px solid rgba(0,0,0,.04);
+    }
+    @media (max-width: 900px) {
+      .concept-image { width: 100%; clip-path: none; opacity: .25; }
+      .concept-image-line { display: none; }
+      #concept .st, .concept-grid-wrap { max-width: 100%; }
+    }
     .concept-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
+      display: flex;
+      flex-direction: column;
       gap: 2px;
       background: var(--bdr);
       border: 1px solid var(--bdr);
       border-radius: 8px;
       overflow: hidden;
     }
-    @media (max-width: 700px) { .concept-grid { grid-template-columns: 1fr; } }
     .concept-card {
       background: var(--wht);
-      padding: 44px 36px;
+      padding: 28px 32px;
       position: relative;
+      display: grid;
+      grid-template-columns: 64px 1fr;
+      gap: 18px;
+      align-items: center;
+    }
+    @media (max-width: 540px) {
+      .concept-card { grid-template-columns: 1fr; gap: 8px; padding: 24px; }
     }
     .concept-card::before {
       content: '';
@@ -435,55 +533,284 @@
     }
     .concept-n {
       font-family: 'Quicksand', sans-serif;
-      font-size: 52px;
+      font-size: 40px;
       font-weight: 700;
       color: var(--y);
       line-height: 1;
-      margin-bottom: 18px;
     }
+    .concept-text {}
     .concept-title {
-      font-size: 17px;
+      font-size: 16px;
       font-weight: 700;
-      margin-bottom: 12px;
+      margin-bottom: 6px;
       line-height: 1.4;
     }
-    .concept-body { font-size: 14px; color: var(--mid); line-height: 1.85; }
+    .concept-body { font-size: 13px; color: var(--mid); line-height: 1.8; }
 
     /* ══════════════════════════════════════════
-       § 3  STRENGTH
+       § 3  STRENGTH (Bento型 + 画像)
     ══════════════════════════════════════════ */
-    .str-grid {
+    .str-bento {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 24px;
+      grid-template-columns: 1.4fr 1fr 1fr;
+      grid-template-rows: 1fr 1fr;
+      gap: 18px;
+      min-height: 640px;
     }
-    @media (max-width: 700px) { .str-grid { grid-template-columns: 1fr; } }
-    .str-card {
-      background: rgba(255,255,255,.04);
+    @media (max-width: 1024px) {
+      .str-bento {
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: auto;
+      }
+    }
+    @media (max-width: 640px) {
+      .str-bento { grid-template-columns: 1fr; min-height: auto; }
+    }
+    .str-cell {
+      position: relative;
+      border-radius: 14px;
+      overflow: hidden;
+      background: rgba(255,255,255,.03);
       border: 1px solid rgba(255,255,255,.08);
-      border-radius: 6px;
-      padding: 40px 32px;
-      transition: transform .35s cubic-bezier(.78,.07,0,1), border-color .3s;
+      transition: transform .4s cubic-bezier(.78,.07,0,1), border-color .3s;
     }
-    .str-card:hover { transform: translateY(-5px); border-color: rgba(255,214,0,.35); }
-    .str-ico {
-      width: 52px; height: 52px;
-      border-radius: 10px;
-      background: var(--y-lt);
-      border: 1px solid rgba(255,214,0,.2);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 24px;
-      margin-bottom: 22px;
+    .str-cell:hover { transform: translateY(-4px); border-color: rgba(255,214,0,.35); }
+    /* メインヒーローセル：左大きく、画像背景 */
+    .str-cell-1 {
+      grid-row: 1 / span 2;
+      grid-column: 1;
+      background:
+        linear-gradient(135deg, rgba(13,13,13,.85) 0%, rgba(13,13,13,.55) 50%, rgba(13,13,13,.2) 100%),
+        radial-gradient(ellipse 60% 60% at 70% 60%, rgba(255,214,0,.22), transparent 70%),
+        repeating-linear-gradient(135deg, rgba(255,214,0,.05) 0 2px, transparent 2px 20px),
+        linear-gradient(160deg, #1a1a1a 0%, #0d0d0d 100%);
+      padding: 44px 40px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-height: 320px;
     }
-    .str-num {
+    @media (max-width: 1024px) {
+      .str-cell-1 { grid-row: auto; grid-column: 1 / -1; }
+    }
+    .str-cell-2 { grid-row: 1; grid-column: 2; }
+    .str-cell-3 { grid-row: 1; grid-column: 3; }
+    .str-cell-4 {
+      grid-row: 2;
+      grid-column: 2 / span 2;
+      background:
+        linear-gradient(135deg, rgba(255,214,0,.12) 0%, rgba(255,214,0,.04) 100%);
+      border-color: rgba(255,214,0,.25);
+    }
+    @media (max-width: 1024px) {
+      .str-cell-2 { grid-row: auto; grid-column: 1; }
+      .str-cell-3 { grid-row: auto; grid-column: 2; }
+      .str-cell-4 { grid-row: auto; grid-column: 1 / -1; }
+    }
+    .str-cell-img {
+      position: absolute;
+      inset: 0;
+      opacity: .35;
+      pointer-events: none;
+      background: url(../lp_materials/03_strength_bg_1777542781884.png) center/cover no-repeat;
+    }
+    .str-cell-1 .str-cell-img::after { content: none; }
+    .str-cell-content {
+      position: relative;
+      z-index: 1;
+      padding: 32px 28px;
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+    }
+    .str-cell-1 .str-cell-content { padding: 0; }
+    .str-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
       font-family: 'Quicksand', sans-serif;
-      font-size: 11px; font-weight: 700;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .18em;
+      color: var(--y);
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+    .str-tag::before {
+      content: '';
+      display: block;
+      width: 18px; height: 1px;
+      background: var(--y);
+    }
+    .str-cell-1 .str-headline {
+      font-size: clamp(28px, 3vw, 40px);
+      font-weight: 800;
+      line-height: 1.25;
+      letter-spacing: -.025em;
+      color: var(--wht);
+      margin-bottom: 18px;
+    }
+    .str-cell-1 .str-headline span { color: var(--y); }
+    .str-cell-1 .str-lead {
+      font-size: 14px;
+      color: rgba(255,255,255,.62);
+      line-height: 1.95;
+      max-width: 460px;
+      margin-bottom: 28px;
+    }
+    .str-cell-1 .str-stack {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .str-stack .str-stack-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 14px;
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.1);
+      border-radius: 100px;
+      font-size: 11px;
+      color: rgba(255,255,255,.7);
+      letter-spacing: .02em;
+    }
+    .str-stack .str-stack-item::before {
+      content: '';
+      width: 5px; height: 5px;
+      border-radius: 50%;
+      background: var(--y);
+    }
+    .str-cell-icon {
+      width: 48px; height: 48px;
+      border-radius: 12px;
+      background: rgba(255,214,0,.12);
+      border: 1px solid rgba(255,214,0,.25);
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 18px;
+    }
+    .str-cell-icon svg { width: 22px; height: 22px; stroke: var(--y); fill: none; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+    .str-cell-num {
+      font-family: 'Quicksand', sans-serif;
+      font-size: 11px;
+      font-weight: 700;
       letter-spacing: .15em;
       color: var(--y);
       margin-bottom: 8px;
     }
-    .str-title { font-size: 18px; font-weight: 700; color: var(--wht); margin-bottom: 14px; line-height: 1.4; }
-    .str-body  { font-size: 13px; color: rgba(255,255,255,.48); line-height: 1.9; }
+    .str-cell-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--wht);
+      margin-bottom: 12px;
+      line-height: 1.4;
+    }
+    .str-cell-body {
+      font-size: 13px;
+      color: rgba(255,255,255,.58);
+      line-height: 1.8;
+      margin-bottom: auto;
+    }
+    .str-cell-meta {
+      margin-top: 18px;
+      padding-top: 16px;
+      border-top: 1px dashed rgba(255,255,255,.1);
+      font-size: 11px;
+      color: rgba(255,214,0,.7);
+      letter-spacing: .04em;
+    }
+    /* 強調セル（成果報酬型） */
+    .str-cell-4 {
+      padding: 36px 40px;
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 28px;
+      align-items: center;
+    }
+    @media (max-width: 700px) {
+      .str-cell-4 { grid-template-columns: 1fr; gap: 16px; }
+    }
+    .str-cell-4 .str-bigmark {
+      font-family: 'Quicksand', sans-serif;
+      font-size: 80px;
+      font-weight: 700;
+      color: var(--y);
+      line-height: .8;
+      letter-spacing: -.04em;
+    }
+    .str-cell-4 .str-bigmark sup {
+      font-size: 22px;
+      vertical-align: super;
+      color: rgba(255,214,0,.7);
+    }
+    .str-cell-4 .str-cell-title { color: var(--wht); margin-bottom: 8px; }
+    .str-cell-4 .str-cell-body { color: rgba(255,255,255,.72); }
+
+    /* ══════════════════════════════════════════
+       § FLOW (導入フロー)
+    ══════════════════════════════════════════ */
+    .flow-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 16px;
+      position: relative;
+    }
+    @media (max-width: 900px) { .flow-grid { grid-template-columns: 1fr 1fr; } }
+    @media (max-width: 540px) { .flow-grid { grid-template-columns: 1fr; } }
+    .flow-step {
+      background: var(--wht);
+      border: 1px solid var(--bdr);
+      border-radius: 10px;
+      padding: 28px 22px;
+      position: relative;
+      transition: transform .35s cubic-bezier(.78,.07,0,1), border-color .3s;
+    }
+    .flow-step:hover { transform: translateY(-4px); border-color: var(--y); }
+    .flow-step::after {
+      content: '→';
+      position: absolute;
+      right: -14px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 18px;
+      color: var(--y-dk);
+      font-weight: 700;
+      z-index: 2;
+    }
+    .flow-step:last-child::after { display: none; }
+    @media (max-width: 900px) { .flow-step::after { display: none; } }
+    .flow-num {
+      font-family: 'Quicksand', sans-serif;
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--y);
+      line-height: 1;
+      margin-bottom: 14px;
+    }
+    .flow-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--blk);
+      margin-bottom: 10px;
+      line-height: 1.4;
+    }
+    .flow-body {
+      font-size: 12px;
+      color: var(--mid);
+      line-height: 1.7;
+      margin-bottom: 14px;
+    }
+    .flow-actor {
+      display: inline-block;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .08em;
+      padding: 3px 10px;
+      border-radius: 100px;
+      background: var(--cream);
+      color: var(--y-dk);
+      border: 1px solid var(--bdr);
+    }
 
     /* ══════════════════════════════════════════
        § 4  REVENUE MODEL (仕組み)
@@ -601,6 +928,53 @@
     .rev-ex-imgph {
       height: 420px;
       border-radius: 12px;
+    }
+    .ex-scene-box {
+      background: rgba(255,255,255,.04);
+      border: 1px solid rgba(255,255,255,.1);
+      border-radius: 12px;
+      padding: 36px 32px;
+    }
+    .ex-scene-title {
+      font-family: 'Quicksand', sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .18em;
+      color: var(--y);
+      text-transform: uppercase;
+      margin-bottom: 22px;
+    }
+    .ex-scene-list { list-style: none; }
+    .ex-scene-list li {
+      display: flex;
+      gap: 14px;
+      padding: 14px 0;
+      border-bottom: 1px solid rgba(255,255,255,.07);
+      font-size: 14px;
+      color: rgba(255,255,255,.7);
+      line-height: 1.6;
+      align-items: flex-start;
+    }
+    .ex-scene-list li:last-child { border-bottom: none; }
+    .ex-scene-n {
+      flex-shrink: 0;
+      width: 26px; height: 26px;
+      border-radius: 50%;
+      background: rgba(255,214,0,.12);
+      border: 1px solid rgba(255,214,0,.3);
+      color: var(--y);
+      font-family: 'Quicksand', sans-serif;
+      font-weight: 700;
+      font-size: 13px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .ex-scene-note {
+      margin-top: 18px;
+      font-size: 12px;
+      color: rgba(255,255,255,.4);
+      line-height: 1.7;
+      padding-top: 14px;
+      border-top: 1px solid rgba(255,255,255,.07);
     }
     .rev-ex-right .context {
       font-size: 13px;
@@ -798,7 +1172,158 @@
     }
 
     /* ══════════════════════════════════════════
-       § 7  CASES
+       § CASES (拡充版・ストーリー型)
+    ══════════════════════════════════════════ */
+    .case-deep {
+      margin-top: 88px;
+      padding-bottom: 72px;
+      border-bottom: 1px solid var(--bdr);
+    }
+    .case-deep:last-of-type { border-bottom: none; padding-bottom: 32px; }
+    .case-deep-head {
+      display: flex;
+      align-items: flex-start;
+      gap: 24px;
+      margin-bottom: 36px;
+    }
+    .case-deep-num {
+      font-family: 'Quicksand', sans-serif;
+      font-size: 56px;
+      font-weight: 700;
+      color: var(--y);
+      line-height: 1;
+      letter-spacing: -.02em;
+    }
+    .case-deep-cat {
+      font-family: 'Quicksand', sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: var(--y-dk);
+      margin-bottom: 6px;
+    }
+    .case-deep-title {
+      font-size: clamp(22px, 3vw, 32px);
+      font-weight: 700;
+      color: var(--blk);
+      line-height: 1.35;
+      letter-spacing: -.02em;
+    }
+    .case-deep-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.2fr;
+      gap: 56px;
+      align-items: start;
+    }
+    @media (max-width: 900px) {
+      .case-deep-grid { grid-template-columns: 1fr; gap: 28px; }
+    }
+    .case-deep-grid-rev .case-deep-img { grid-column: 2; }
+    .case-deep-grid-rev .case-deep-body { grid-column: 1; grid-row: 1; }
+    @media (max-width: 900px) {
+      .case-deep-grid-rev .case-deep-img,
+      .case-deep-grid-rev .case-deep-body { grid-column: auto; grid-row: auto; }
+    }
+    .case-deep-img {
+      width: 100%;
+      aspect-ratio: 4 / 5;
+      border-radius: 12px;
+      background: var(--cream);
+      border: 1px solid var(--bdr);
+      position: relative;
+      overflow: hidden;
+    }
+    .case-deep-img::after { content: none; }
+    .case-img-care {
+      background:
+        linear-gradient(135deg, rgba(255,214,0,.08), transparent 50%),
+        url(../lp_materials/05_case_nursing_1777542814396.png) center/cover no-repeat;
+    }
+    .case-img-travel {
+      background:
+        linear-gradient(180deg, rgba(255,214,0,.06), transparent 50%),
+        url(../lp_materials/06_case_travel_1777542844760.png) center/cover no-repeat;
+    }
+    .case-img-const {
+      background:
+        linear-gradient(135deg, rgba(0,0,0,.08), transparent 50%),
+        url(../lp_materials/07_case_housing_1777542859084.png) center/cover no-repeat;
+    }
+    .case-img-gym {
+      background:
+        linear-gradient(180deg, rgba(0,0,0,.06), transparent 50%),
+        url(../lp_materials/08_case_gym_1777542875599.png) center/cover no-repeat;
+    }
+    .case-img-wedding {
+      background:
+        radial-gradient(ellipse 60% 40% at 50% 30%, rgba(255,214,0,.12), transparent),
+        url(../lp_materials/09_case_wedding_1777542890282.png) center/cover no-repeat;
+    }
+    .case-img-salon {
+      background:
+        linear-gradient(135deg, rgba(255,214,0,.06), transparent 50%),
+        url(../lp_materials/10_case_salon_1777542904528.png) center/cover no-repeat;
+    }
+    .case-deep-body { display: flex; flex-direction: column; gap: 24px; }
+    .case-deep-section {}
+    .case-deep-label {
+      font-family: 'Quicksand', sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .12em;
+      color: var(--y-dk);
+      text-transform: uppercase;
+      margin-bottom: 10px;
+      padding-bottom: 6px;
+      border-bottom: 1px solid var(--bdr);
+    }
+    .case-deep-section p {
+      font-size: 14px;
+      color: var(--mid);
+      line-height: 1.95;
+    }
+    .case-deep-list { list-style: none; }
+    .case-deep-list li {
+      font-size: 13.5px;
+      color: var(--mid);
+      padding: 5px 0 5px 18px;
+      position: relative;
+      line-height: 1.8;
+    }
+    .case-deep-list li::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 14px;
+      width: 8px; height: 1px;
+      background: var(--y);
+    }
+    .case-deep-quote {
+      background: var(--cream);
+      border-left: 3px solid var(--y);
+      padding: 12px 16px;
+      font-size: 13.5px;
+      color: var(--blk);
+      line-height: 1.8;
+      margin-bottom: 10px;
+      border-radius: 2px;
+    }
+    .case-deep-quote:last-child { margin-bottom: 0; }
+    .cases-other {
+      margin-top: 56px;
+      padding: 24px 28px;
+      background: var(--cream);
+      border-radius: 8px;
+      text-align: center;
+    }
+    .cases-other p {
+      font-size: 13px;
+      color: var(--mid);
+      line-height: 1.85;
+    }
+
+    /* ══════════════════════════════════════════
+       § 7  CASES (legacy)
     ══════════════════════════════════════════ */
     .cases-layout {
       display: grid;
@@ -841,6 +1366,28 @@
         -45deg, transparent, transparent 8px,
         rgba(255,214,0,.1) 8px, rgba(255,214,0,.1) 9px
       );
+    }
+    .case-top--const {
+      background: #1f1208;
+    }
+    .case-top--const::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(255,214,0,.08) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,214,0,.08) 1px, transparent 1px);
+      background-size: 32px 32px;
+    }
+    .case-top--gym {
+      background: #1a1018;
+    }
+    .case-top--gym::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: radial-gradient(circle, rgba(255,214,0,.16) 1.5px, transparent 1.5px);
+      background-size: 28px 28px;
     }
     .case-top-content { position: relative; z-index: 1; }
     .case-badge {
@@ -905,12 +1452,142 @@
       cursor: default;
     }
     .ind-card:hover { border-color: rgba(255,214,0,.4); background: rgba(255,214,0,.06); transform: translateY(-3px); }
-    .ind-icon { font-size: 30px; margin-bottom: 12px; }
+    .ind-card { padding: 0; overflow: hidden; }
+    .ind-img {
+      width: 100%;
+      aspect-ratio: 4 / 3;
+      background: rgba(255,255,255,.06);
+      border-bottom: 1px solid rgba(255,255,255,.08);
+      position: relative;
+    }
+    .ind-img-care    { background: linear-gradient(135deg, rgba(255,214,0,.1), transparent 50%), url(../lp_materials/11_industry_nursing_1777542935644.png) center/cover no-repeat; }
+    .ind-img-travel  { background: linear-gradient(180deg, rgba(255,214,0,.06), transparent 50%), url(../lp_materials/12_industry_travel_1777542950037.png) center/cover no-repeat; }
+    .ind-img-const   { background: linear-gradient(135deg, rgba(255,214,0,.06), transparent 50%), url(../lp_materials/13_industry_housing_1777542968761.png) center/cover no-repeat; }
+    .ind-img-gym     { background: linear-gradient(180deg, rgba(255,214,0,.08), transparent 50%), url(../lp_materials/14_industry_gym_1777542984088.png) center/cover no-repeat; }
+    .ind-img-school  { background: linear-gradient(180deg, rgba(255,214,0,.08), transparent 50%), url(../lp_materials/15_industry_cramschool_1777542998707.png) center/cover no-repeat; }
+    .ind-img-wedding { background: radial-gradient(ellipse 60% 40% at 50% 30%, rgba(255,214,0,.1), transparent), url(../lp_materials/16_industry_wedding_1777543035992.png) center/cover no-repeat; }
+    .ind-img-salon   { background: linear-gradient(135deg, rgba(255,214,0,.06), transparent 50%), url(../lp_materials/17_industry_salon_1777543052360.png) center/cover no-repeat; }
+    .ind-img-pet     { background: radial-gradient(circle at 70% 30%, rgba(255,214,0,.1), transparent 50%), url(../lp_materials/18_industry_pet.jpg) center/cover no-repeat; }
+    .ind-img-other   { background: linear-gradient(135deg, rgba(255,214,0,.08), transparent 50%), url(../lp_materials/19_industry_business.jpg) center/cover no-repeat; }
+    .ind-img::after { content: none; }
+    .ind-content { padding: 18px 18px 22px; text-align: center; }
+    .ind-icon {
+      margin: 0 auto 12px;
+      width: 36px; height: 36px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .ind-icon svg { width: 22px; height: 22px; stroke: var(--y); fill: none; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
     .ind-name { font-size: 13px; font-weight: 700; color: var(--wht); margin-bottom: 5px; }
     .ind-eg   { font-size: 11px; color: rgba(255,255,255,.38); line-height: 1.6; }
     .ind-card--cta { border-color: rgba(255,214,0,.25); background: rgba(255,214,0,.07); }
     .ind-card--cta .ind-name { color: var(--y); }
     .ind-card--cta .ind-eg   { color: rgba(255,214,0,.55); }
+
+    /* ══════════════════════════════════════════
+       § SAFETY (左右フロー型)
+    ══════════════════════════════════════════ */
+    .safety-flow {
+      display: grid;
+      grid-template-columns: 1fr 80px 1fr;
+      gap: 24px;
+      align-items: center;
+      margin-top: 56px;
+    }
+    @media (max-width: 900px) {
+      .safety-flow { grid-template-columns: 1fr; gap: 32px; }
+    }
+    .safety-flow-items {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    .safety-flow-item {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 16px 20px;
+      background: var(--wht);
+      border: 1px solid var(--bdr);
+      border-radius: 8px;
+      position: relative;
+      transition: transform .3s cubic-bezier(.78,.07,0,1), border-color .3s;
+    }
+    .safety-flow-item:hover { transform: translateX(4px); border-color: var(--y); }
+    .safety-flow-num {
+      flex-shrink: 0;
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      background: var(--y-lt);
+      border: 1px solid rgba(255,214,0,.3);
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Quicksand', sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--y-dk);
+    }
+    .safety-flow-text { flex: 1; }
+    .safety-flow-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--blk);
+      margin-bottom: 3px;
+    }
+    .safety-flow-body {
+      font-size: 12px;
+      color: var(--mid);
+      line-height: 1.65;
+    }
+    .safety-flow-arrow {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: var(--y-dk);
+    }
+    .safety-flow-arrow svg { width: 80px; height: 200px; max-height: 100%; }
+    @media (max-width: 900px) {
+      .safety-flow-arrow svg { transform: rotate(90deg); width: 60px; height: 60px; }
+    }
+    .safety-flow-receiver {
+      background: var(--blk);
+      border-radius: 12px;
+      padding: 40px 32px;
+      color: var(--wht);
+      position: relative;
+      overflow: hidden;
+    }
+    .safety-flow-receiver::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: radial-gradient(circle, rgba(255,214,0,.15) 1.5px, transparent 1.5px);
+      background-size: 24px 24px;
+      pointer-events: none;
+    }
+    .safety-flow-receiver-inner { position: relative; z-index: 1; text-align: center; }
+    .safety-flow-receiver-label {
+      font-family: 'Quicksand', sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .18em;
+      color: var(--y);
+      text-transform: uppercase;
+      margin-bottom: 14px;
+    }
+    .safety-flow-receiver-logo {
+      font-family: 'Quicksand', sans-serif;
+      font-size: 34px;
+      font-weight: 700;
+      color: var(--wht);
+      margin-bottom: 18px;
+      letter-spacing: .01em;
+    }
+    .safety-flow-receiver-logo span { color: var(--y); }
+    .safety-flow-receiver-text {
+      font-size: 13px;
+      color: rgba(255,255,255,.65);
+      line-height: 1.85;
+    }
 
     /* ══════════════════════════════════════════
        § 9  FAQ
@@ -978,6 +1655,42 @@
       padding: 6px 0;
     }
     .cta-checklist li::before { content: '✓'; font-weight: 700; color: var(--blk); }
+    .cta-pilot {
+      margin-top: 28px;
+      padding: 22px 24px;
+      background: rgba(0,0,0,.06);
+      border: 1px solid rgba(0,0,0,.1);
+      border-radius: 8px;
+    }
+    .cta-pilot-title {
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: .08em;
+      color: var(--blk);
+      margin-bottom: 12px;
+    }
+    .cta-pilot-list { list-style: none; }
+    .cta-pilot-list li {
+      font-size: 13px;
+      color: rgba(0,0,0,.65);
+      padding: 4px 0 4px 16px;
+      position: relative;
+      line-height: 1.6;
+    }
+    .cta-pilot-list li::before {
+      content: '▸';
+      position: absolute;
+      left: 0;
+      color: var(--blk);
+      font-weight: 700;
+    }
+    .cta-pilot-note {
+      font-size: 11px;
+      color: rgba(0,0,0,.45);
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 1px solid rgba(0,0,0,.08);
+    }
 
     .form-box {
       background: var(--blk);
@@ -1003,6 +1716,22 @@
     .f-input:focus, .f-select:focus, .f-textarea:focus { border-color: var(--y); }
     .f-select option { background: #1a1a1a; }
     .f-textarea { min-height: 80px; resize: vertical; }
+    .f-consent {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      margin: 8px 0 14px;
+      font-size: 11px;
+      color: rgba(255,255,255,.55);
+      line-height: 1.5;
+      cursor: pointer;
+    }
+    .f-consent-check {
+      flex-shrink: 0;
+      margin-top: 2px;
+      accent-color: var(--y);
+    }
+    .f-consent a { color: var(--y); text-decoration: underline; }
     .f-submit {
       width: 100%;
       margin-top: 6px;
@@ -1020,26 +1749,148 @@
     .f-submit:hover { background: var(--y-dk); transform: translateY(-1px); }
     .f-note { font-size: 11px; color: rgba(255,255,255,.22); text-align: center; margin-top: 10px; }
 
+    /* ══════════════════════════════════════════
+       § STORY (代表者写真 + CTA)
+    ══════════════════════════════════════════ */
+    .story-grid {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: 56px;
+      align-items: start;
+      max-width: 980px;
+      margin: 0 auto;
+    }
+    @media (max-width: 768px) {
+      .story-grid { grid-template-columns: 1fr; gap: 32px; }
+    }
+    .story-rep { display: flex; flex-direction: column; gap: 18px; }
+    .story-rep-photo {
+      width: 100%;
+      aspect-ratio: 3 / 4;
+      background: url(../lp_materials/04_story_profile_1777542797707.png) center top/cover no-repeat;
+      border: 1px solid rgba(255,214,0,.18);
+      border-radius: 8px;
+      position: relative;
+    }
+    .story-rep-photo::after { content: none; }
+    .story-rep-meta { padding-left: 4px; }
+    .story-rep-label {
+      font-family: 'Quicksand', sans-serif;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .14em;
+      color: var(--y);
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+    .story-rep-name {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--wht);
+      margin-bottom: 4px;
+    }
+    .story-rep-role {
+      font-family: 'Quicksand', sans-serif;
+      font-size: 11px;
+      color: rgba(255,255,255,.4);
+      letter-spacing: .04em;
+    }
+    .story-text p {
+      font-size: 15px;
+      color: rgba(255,255,255,.75);
+      line-height: 2.05;
+      margin-bottom: 22px;
+    }
+    .story-text em {
+      color: var(--y);
+      font-style: normal;
+      font-weight: 700;
+    }
+    .story-cta {
+      margin-top: 36px;
+      padding: 28px 28px;
+      background: rgba(255,214,0,.05);
+      border: 1px solid rgba(255,214,0,.2);
+      border-radius: 10px;
+    }
+    .story-cta-text {
+      font-size: 14.5px !important;
+      color: var(--wht) !important;
+      line-height: 1.85 !important;
+      margin-bottom: 18px !important;
+      font-weight: 500;
+    }
+    .story-cta-btn { font-size: 13px; }
+
     /* ══ Footer ══ */
     footer {
       background: var(--blk);
       border-top: 1px solid rgba(255,255,255,.06);
-      padding: 28px 48px;
+      padding: 36px 48px 28px;
+    }
+    .footer-inner {
+      max-width: 1120px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1.2fr 1fr 1fr;
+      gap: 36px;
+      align-items: start;
+    }
+    @media (max-width: 768px) {
+      .footer-inner { grid-template-columns: 1fr; gap: 24px; }
+      footer { padding: 28px 24px; }
+    }
+    .footer-brand {
       display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 12px;
+      flex-direction: column;
+      gap: 10px;
     }
     .footer-logo {
       font-family: 'Quicksand', sans-serif;
-      font-size: 16px;
+      font-size: 18px;
       font-weight: 700;
       color: var(--wht);
       text-decoration: none;
     }
     .footer-logo span { color: var(--y); }
-    footer p { font-size: 11px; color: rgba(255,255,255,.22); }
+    .footer-tagline { font-size: 11px; color: rgba(255,255,255,.4); line-height: 1.7; }
+    .footer-col h4 {
+      font-family: 'Quicksand', sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .12em;
+      color: rgba(255,255,255,.55);
+      margin-bottom: 12px;
+      text-transform: uppercase;
+    }
+    .footer-col ul { list-style: none; }
+    .footer-col li { margin-bottom: 6px; }
+    .footer-col a, .footer-col span {
+      font-size: 12px;
+      color: rgba(255,255,255,.4);
+      text-decoration: none;
+      transition: color .2s;
+    }
+    .footer-col a:hover { color: var(--y); }
+    .footer-bottom {
+      max-width: 1120px;
+      margin: 28px auto 0;
+      padding-top: 18px;
+      border-top: 1px solid rgba(255,255,255,.06);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .footer-bottom p { font-size: 11px; color: rgba(255,255,255,.25); }
+    .footer-bottom-links { display: flex; gap: 18px; }
+    .footer-bottom-links a {
+      font-size: 11px;
+      color: rgba(255,255,255,.35);
+      text-decoration: none;
+    }
+    .footer-bottom-links a:hover { color: var(--y); }
 
     /* ══ Reveal animation ══ */
     .rv {
@@ -1062,11 +1913,12 @@
 <nav>
   <a href="#hero" class="nav-logo">Film<span>Link</span></a>
   <ul class="nav-links">
-    <li><a href="#story">STORY</a></li>
     <li><a href="#concept">CONCEPT</a></li>
     <li><a href="#strength">STRENGTH</a></li>
-    <li><a href="#rev-model">REVENUE</a></li>
+    <li><a href="#flow">FLOW</a></li>
     <li><a href="#cases">CASES</a></li>
+    <li><a href="#safety">SAFETY</a></li>
+    <li><a href="#story">STORY</a></li>
     <li><a href="#faq">FAQ</a></li>
   </ul>
   <a href="#contact" class="nav-cta">無料相談</a>
@@ -1074,15 +1926,18 @@
 
 <!-- ════ § 1 HERO ════ -->
 <section id="hero" data-dot="Hero">
+  <div class="hero-image" aria-hidden="true"></div>
+  <div class="hero-image-line" aria-hidden="true"></div>
   <div class="container">
     <div class="hero-z">
       <p class="hero-kicker">FilmLink — Partnership Program</p>
-      <h1 class="hero-h1">あなたのサービスに、<br><span class="yel">映像を足しませんか。</span></h1>
-      <p class="hero-h1b">一緒に、お客様の大切な瞬間を形にしましょう。</p>
+      <h1 class="hero-h1">貴社のサービスに、<br><span class="yel">新しい"価値"</span>を。</h1>
+      <p class="hero-h1b">FilmLinkが、映像で貴社の体験価値を一段引き上げます。</p>
       <p class="hero-body">
-        FilmLinkは映像制作会社です。でも、自分たちだけで売りません。<br>
-        すでにお客様との接点をお持ちの事業者様と組んで、<br>
-        映像オプションをあなたのサービスの一部として届けます。
+        FilmLinkは、既存事業者様の"お客様との接点"を活かして、<br>
+        映像制作をサービスのオプションとして組み込む提携モデルです。<br>
+        貴社のサービスにFilmLinkを掛け合わせることで、<br>
+        他社にはない付加価値・差別化を一緒に創り出します。
       </p>
       <div class="hero-btns">
         <a href="#contact" class="btn btn--y">無料でご相談する →</a>
@@ -1091,8 +1946,8 @@
       <div class="hero-pills">
         <span class="pill">初期費用ゼロ</span>
         <span class="pill">月額費用ゼロ</span>
+        <span class="pill">完全成果報酬型・リスクゼロ</span>
         <span class="pill">撮影・編集はすべてFilmLink</span>
-        <span class="pill">売上の20%をシェア</span>
       </div>
     </div>
   </div>
@@ -1101,62 +1956,45 @@
     <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
       <path d="M8 3v10M4 9l4 4 4-4"/>
     </svg>
-  </div>
-</section>
-
-<!-- ════ § STORY ════ -->
-<section class="page page--dark2 pat-grid" id="story" data-dot="Story">
-  <div class="container">
-    <div class="st rv">
-      <div class="st-en">STORY</div>
-      <div class="st-body">
-        <p class="st-label">私たちの想い</p>
-        <h2 class="st-ja">映像は、「その場限り」を<br>永遠に変える力がある。</h2>
-      </div>
-    </div>
-    <div class="rv" style="max-width:720px; margin: 0 auto;">
-      <p style="font-size:16px; color:rgba(255,255,255,.75); line-height:2.1; margin-bottom:28px;">
-        子供の頃の運動会のビデオ、家族で出かけた公園でのホームビデオ。大人になってから見返したとき、当時の空気や感情が鮮明に蘇り、胸が熱くなった経験はありませんか？
-      </p>
-      <p style="font-size:16px; color:rgba(255,255,255,.75); line-height:2.1; margin-bottom:28px;">
-        人はそれぞれ、固有のストーリーを歩んでいます。その瞬間をフィルムとして残し、いつでもあの日の感動に帰れるようにすること。それが映像の本質的な価値だと、私たちは信じています。
-      </p>
-      <p style="font-size:16px; color:rgba(255,255,255,.75); line-height:2.1; margin-bottom:40px;">
-        私たちが組みたいのは、お客様の体験に本気で向き合っている事業者様です。単なる収益のためではなく、<em style="color:var(--y);font-style:normal">貴社が生み出す「最高の笑顔」を一生の記録として残すこと</em>を、一緒に実現したいと考えています。
-      </p>
-      <div style="border-left:3px solid var(--y); padding-left:20px;">
-        <p style="font-size:13px; color:rgba(255,255,255,.45); line-height:1.8;">現在、テスト導入パートナーとして一緒に実績を積んでいただける事業者様を探しています。実際の顧客満足度・導入効果を共に検証しながら、最良の形を一緒に作っていきましょう。</p>
-      </div>
-    </div>
   </div>
 </section>
 
 <!-- ════ § 2 CONCEPT ════ -->
 <section class="page page--white pat-cross" id="concept" data-dot="Concept">
+  <div class="concept-image" aria-hidden="true"></div>
+  <div class="concept-image-line" aria-hidden="true"></div>
   <div class="container">
     <div class="st rv">
       <div class="st-en">CONCEPT</div>
       <div class="st-body">
         <p class="st-label">コンセプト</p>
-        <h2 class="st-ja">「映像 × あなたの事業」で<br>新しい価値を生む</h2>
-        <p class="st-sub">FilmLinkは映像を「単独販売」しません。あなたの事業の中に映像オプションとして組み込み、お互いの強みを活かして届けます。</p>
+        <h2 class="st-ja">「映像 × 貴社の事業」で<br>新しい価値を生む</h2>
+        <p class="st-sub">FilmLinkは映像を「単独販売」しません。貴社の事業の中に映像オプションとして組み込み、お互いの強みを活かして届けます。</p>
       </div>
     </div>
-    <div class="concept-grid rv">
-      <div class="concept-card">
-        <div class="concept-n">01</div>
-        <div class="concept-title">あなたは「案内するだけ」</div>
-        <div class="concept-body">撮影・編集・納品・修正対応はすべてFilmLinkが担当します。あなたのスタッフに新たな業務は一切発生しません。QRコードや案内チラシを渡すだけで完結します。</div>
-      </div>
-      <div class="concept-card rv rv-d1">
-        <div class="concept-n">02</div>
-        <div class="concept-title">売れた分だけ収益になる</div>
-        <div class="concept-body">月額費用も最低件数の縛りもありません。お客様が申し込むたびに売上の20%が提携先様の収益として発生する、完全成果報酬型のモデルです。</div>
-      </div>
-      <div class="concept-card rv rv-d2">
-        <div class="concept-n">03</div>
-        <div class="concept-title">他社にない差別化軸になる</div>
-        <div class="concept-body">「この施設は映像オプションがある」「この工務店は引き渡し映像を撮ってくれる」——競合がやっていないサービスを、コストゼロで付け加えられます。既存のお客様への提案の幅も広がります。</div>
+    <div class="concept-grid-wrap rv">
+      <div class="concept-grid">
+        <div class="concept-card">
+          <div class="concept-n">01</div>
+          <div class="concept-text">
+            <div class="concept-title">体験を、記憶に変える</div>
+            <div class="concept-body">サービスの提供で終わらせず、お客様の表情・言葉・関係性を映像として残すことで、貴社の体験そのものに「思い出として残る」という新しい価値が加わります。</div>
+          </div>
+        </div>
+        <div class="concept-card">
+          <div class="concept-n">02</div>
+          <div class="concept-text">
+            <div class="concept-title">他社にない、差別化軸へ</div>
+            <div class="concept-body">「映像オプションがある事業者」として、競合がやっていないサービスをコストゼロで付け加えられます。既存のお客様への提案の幅が広がり、紹介・口コミ・継続にもつながります。</div>
+          </div>
+        </div>
+        <div class="concept-card">
+          <div class="concept-n">03</div>
+          <div class="concept-text">
+            <div class="concept-title">価値は、一緒に創る</div>
+            <div class="concept-body">FilmLinkは「映像を売る会社」ではなく、貴社の体験価値を一緒に磨くパートナーです。業種・現場に合わせて、最も自然に組み込める形を一緒に設計します。</div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -1168,387 +2006,396 @@
   </div>
 </section>
 
-<!-- ════ § 3 STRENGTH ════ -->
+<!-- ════ § 3 STRENGTH (Bento型) ════ -->
 <section class="page page--dark pat-diag" id="strength" data-dot="Strength">
   <div class="container">
     <div class="st rv">
       <div class="st-en">STRENGTH</div>
       <div class="st-body">
         <p class="st-label">選ばれる理由</p>
-        <h2 class="st-ja">FilmLinkが<br>選ばれる3つの理由</h2>
+        <h2 class="st-ja">"映像オプション"を、<br>提携先様の負担ゼロで実現する仕組み。</h2>
+        <p class="st-sub">他社との差別化軸を、リスクなく・手間なく・自然に組み込める。FilmLinkが提携先様から選ばれている理由です。</p>
       </div>
     </div>
-    <div class="str-grid">
-      <div class="str-card rv">
-        <div class="str-ico">🎬</div>
-        <div class="str-num">REASON 01</div>
-        <div class="str-title">映像のプロが<br>全工程を担う</div>
-        <div class="str-body">撮影・照明・編集・BGM・テロップ・納品まで、FilmLinkのチームがすべて対応します。提携先様はただ「紹介する」だけでOKです。人を増やす必要も、機材を買う必要もありません。</div>
-      </div>
-      <div class="str-card rv rv-d1">
-        <div class="str-ico">💰</div>
-        <div class="str-num">REASON 02</div>
-        <div class="str-title">リスクゼロ・<br>成果報酬型</div>
-        <div class="str-body">初期投資ゼロ、月額費用ゼロ。申し込みが発生した時だけ収益が生まれる完全成果報酬型です。「とりあえず試してみる」が可能なので、失敗のリスクがありません。</div>
-      </div>
-      <div class="str-card rv rv-d2">
-        <div class="str-ico">🤝</div>
-        <div class="str-num">REASON 03</div>
-        <div class="str-title">「一緒に作る」<br>スタンス</div>
-        <div class="str-body">「FilmLinkのサービスを売ってください」ではなく、「一緒にお客様に喜んでもらいましょう」がスタンスです。提携先のブランドを守りながら、あなたの事業の延長として進めます。</div>
-      </div>
-    </div>
-  </div>
-</section>
+    <div class="str-bento rv">
 
-<!-- ════ § 4 REVENUE MODEL (仕組み) ════ -->
-<section class="page page--dark2 pat-grid" id="rev-model" data-dot="Revenue">
-  <div class="container">
-    <div class="st rv">
-      <div class="st-en">REVENUE</div>
-      <div class="st-body">
-        <p class="st-label">報酬体系</p>
-        <h2 class="st-ja">報酬の仕組みは、<br>シンプルです。</h2>
-        <p class="st-sub">お客様が支払った金額を、FilmLinkと提携先様で分け合います。</p>
-      </div>
-    </div>
-    <div class="rev-model rv">
-      <div class="rev-model-left">
-        <p class="lead">
-          お客様が1本<em>5万円</em>のサービスを申し込む。<br>
-          そのうち<em>20%（10,000円）</em>が、<br>
-          あなたの事業の収益になります。
-        </p>
-        <ul class="rev-points">
-          <li>
-            <span class="ico">¥</span>
-            <span><strong style="color:var(--wht)">売れた分だけ発生</strong> — 月額・最低件数の縛りは一切なし。申し込みがなければ費用もゼロ</span>
-          </li>
-          <li>
-            <span class="ico">📅</span>
-            <span><strong style="color:var(--wht)">翌月末に振込</strong> — 売上が発生した翌月末に指定口座へ自動振り込み。管理の手間なし</span>
-          </li>
-          <li>
-            <span class="ico">📋</span>
-            <span><strong style="color:var(--wht)">毎月の明細を送付</strong> — 月次で件数・金額の明細をFilmLinkから送付します</span>
-          </li>
-        </ul>
-      </div>
-      <div class="split-visual">
-        <div class="split-top">
-          <div class="split-amount en">¥50,000</div>
-          <div class="split-label">お客様が支払う金額（例：日常記録ムービー）</div>
-        </div>
-        <div class="split-arrow">↓ 分配</div>
-        <div class="split-rows">
-          <div class="split-row you">
-            <div class="split-row-left">
-              <div class="who">提携先様（あなた）</div>
-              <div class="pct">売上の 20%</div>
-            </div>
-            <div class="split-row-right en">¥10,000</div>
-          </div>
-          <div class="split-mini-bar"><div class="split-mini-fill" style="width:20%"></div></div>
-          <div class="split-row">
-            <div class="split-row-left">
-              <div class="who">FilmLink（制作）</div>
-              <div class="pct">売上の 80%</div>
-            </div>
-            <div class="split-row-right en">¥40,000</div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ════ § 5 REVENUE EXAMPLE (介護施設) ════ -->
-<section class="page page--dark pat-dot" id="rev-example" data-dot="Example">
-  <div class="container">
-    <div class="st rv">
-      <div class="st-en">EXAMPLE</div>
-      <div class="st-body">
-        <p class="st-label">具体例</p>
-        <h2 class="st-ja">有料老人ホームの場合、<br>こうなります。</h2>
-      </div>
-    </div>
-    <div class="rev-ex-grid rv">
-      <!-- Image placeholder -->
-      <div class="imgph rev-ex-imgph">
-        <div class="imgph-icon">📷</div>
-        <div class="imgph-label">施設・撮影シーン画像</div>
-        <div class="imgph-size">推奨サイズ: 600 × 420 px</div>
-      </div>
-      <!-- Right: breakdown -->
-      <div class="rev-ex-right">
-        <p class="context">想定シナリオ｜入居者50名規模の有料老人ホーム</p>
-        <p class="title">入居者の日常を映像に。<br>離れた家族へ届けるサービス。</p>
-
-        <div class="ex-service-box">
+      <!-- メインヒーローセル：FilmLinkが全工程を担う -->
+      <div class="str-cell str-cell-1">
+        <div class="str-cell-img" aria-hidden="true"></div>
+        <div class="str-cell-content">
           <div>
-            <div class="ex-service-name">日常記録ムービー（4〜6分）</div>
-            <div style="font-size:12px;color:rgba(255,255,255,.35);margin-top:3px">施設内60〜90分撮影・編集・URLリンク納品</div>
+            <div class="str-tag">Reason 01 / Full Production</div>
+            <h3 class="str-headline">撮影から納品まで、<br><span>すべてFilmLink。</span></h3>
+            <p class="str-lead">撮影・照明・音声・編集・BGM・テロップ・納品・修正対応まで、映像制作のすべての工程を私たちのチームで完結します。提携先様にお願いするのは、お客様への案内と日程調整だけ。新しい人材や機材は一切必要ありません。</p>
           </div>
-          <div class="ex-service-price en">¥50,000</div>
-        </div>
-
-        <div class="ex-split-rows">
-          <div class="ex-split-row you-row">
-            <div>
-              <div class="ex-row-who">施設様の収益（20%）</div>
-              <div class="ex-row-pct">案内するだけでこの金額があなたへ</div>
-            </div>
-            <div class="ex-row-amt en">¥10,000</div>
-          </div>
-          <div class="ex-split-row filmlink">
-            <div>
-              <div class="ex-row-who" style="color:rgba(255,255,255,.5)">FilmLink（撮影・編集）80%</div>
-            </div>
-            <div class="ex-row-amt en" style="color:rgba(255,255,255,.4);font-size:20px">¥40,000</div>
-          </div>
-        </div>
-
-        <div class="ex-bar"><div class="ex-bar-fill"></div></div>
-
-        <div class="ex-proj-grid rv">
-          <div class="ex-proj-card">
-            <div class="ex-proj-case">月 1 件の場合</div>
-            <div class="ex-proj-monthly en">¥10,000<span style="font-size:13px;color:rgba(255,214,0,.6)">/月</span></div>
-            <div class="ex-proj-annual">年間 ¥120,000</div>
-          </div>
-          <div class="ex-proj-card" style="border-color:rgba(255,214,0,.3);background:rgba(255,214,0,.08)">
-            <div class="ex-proj-case" style="color:var(--y)">月 2 件の場合</div>
-            <div class="ex-proj-monthly en">¥20,000<span style="font-size:13px;color:rgba(255,214,0,.6)">/月</span></div>
-            <div class="ex-proj-annual" style="color:var(--y)">年間 ¥240,000</div>
-          </div>
-          <div class="ex-proj-card">
-            <div class="ex-proj-case">月 5 件の場合</div>
-            <div class="ex-proj-monthly en">¥50,000<span style="font-size:13px;color:rgba(255,214,0,.6)">/月</span></div>
-            <div class="ex-proj-annual">年間 ¥600,000</div>
+          <div class="str-stack">
+            <span class="str-stack-item">プロカメラマン</span>
+            <span class="str-stack-item">照明・音声</span>
+            <span class="str-stack-item">編集・BGM</span>
+            <span class="str-stack-item">テロップ・字幕</span>
+            <span class="str-stack-item">URL納品</span>
+            <span class="str-stack-item">修正対応</span>
           </div>
         </div>
       </div>
+
+      <!-- セル2：ブランドを守る・一緒に作る -->
+      <div class="str-cell str-cell-2">
+        <div class="str-cell-content">
+          <div class="str-cell-icon">
+            <svg viewBox="0 0 24 24"><path d="M12 3l8 4v6c0 4.5-3.5 7.5-8 8-4.5-.5-8-3.5-8-8V7z"/><path d="M9 12l2 2 4-4"/></svg>
+          </div>
+          <div class="str-cell-num">REASON 02</div>
+          <div class="str-cell-title">提携先様のブランドを、<br>主役のままに。</div>
+          <div class="str-cell-body">「FilmLinkを売ってください」ではありません。貴社のブランドを前面に、貴社サービスの一部として自然に映像を組み込みます。お客様にとっては、貴社の体験そのものが進化したように映ります。</div>
+          <div class="str-cell-meta">— 貴社名でのオプション展開も歓迎</div>
+        </div>
+      </div>
+
+      <!-- セル3：価値を一緒に設計する -->
+      <div class="str-cell str-cell-3">
+        <div class="str-cell-content">
+          <div class="str-cell-icon">
+            <svg viewBox="0 0 24 24"><circle cx="7" cy="8" r="3"/><circle cx="17" cy="8" r="3"/><path d="M2 20c1-3 3-5 5-5s4 2 5 5M12 20c1-3 3-5 5-5s4 2 5 5"/></svg>
+          </div>
+          <div class="str-cell-num">REASON 03</div>
+          <div class="str-cell-title">業種ごとの形を、<br>一緒に設計する。</div>
+          <div class="str-cell-body">介護・旅行・工務店・ジム・サロン…業種ごとに「お客様が一番嬉しい瞬間」は違います。FilmLinkは型にはめず、貴社の現場と一緒に最適な組み込み方を設計します。</div>
+          <div class="str-cell-meta">— 業種別の活用イメージはCASESへ</div>
+        </div>
+      </div>
+
+      <!-- セル4：リスクゼロ強調セル -->
+      <div class="str-cell str-cell-4">
+        <div class="str-bigmark">0<sup>円</sup></div>
+        <div>
+          <div class="str-cell-num">REASON 04 / RISK</div>
+          <div class="str-cell-title">初期費用・月額費用ゼロ、<br>完全成果報酬型。</div>
+          <div class="str-cell-body">設備投資・人材確保・月額固定費は一切ありません。お客様からの申込が発生しなければ、貴社へのご請求も発生しません。「まず試してみる」がそのままできる、失敗リスクのない提携モデルです。</div>
+        </div>
+      </div>
+
     </div>
   </div>
 </section>
 
-<!-- ════ § 6 REVENUE SIMULATION ════ -->
-<section class="page page--cream pat-cross" id="rev-sim" data-dot="Simulation" style="align-items:flex-start; padding-top:120px; padding-bottom:100px; min-height:100vh;">
+<!-- ════ § FLOW (導入フロー) ════ -->
+<section class="page page--cream pat-cross" id="flow" data-dot="Flow">
   <div class="container">
     <div class="st rv">
-      <div class="st-en">SIMULATE</div>
+      <div class="st-en">FLOW</div>
       <div class="st-body">
-        <p class="st-label">収益シミュレーション</p>
-        <h2 class="st-ja">月にいくらプラスになるか、<br>件数別で見てみましょう。</h2>
-        <p class="st-sub">条件：有料老人ホーム × 日常記録ムービー（販売価格 ¥50,000 / 施設取り分 20% = ¥10,000 / 件）</p>
+        <p class="st-label">導入フロー</p>
+        <h2 class="st-ja">案内から納品まで、<br>5つのステップで完結します。</h2>
+        <p class="st-sub">業種を問わず、ほぼ同じ流れで運用できます。貴社にお願いするのは、お客様への案内と撮影日の日程調整のみです。</p>
       </div>
     </div>
-
-    <div class="sim-rows rv">
-
-      <div class="sim-row">
-        <div class="sim-left">
-          <div class="sim-case en">per month</div>
-          <div class="sim-count">1<span> 件</span></div>
-          <div class="sim-base">¥10,000 × 1件</div>
-        </div>
-        <div class="sim-center">
-          <div class="sim-bar-outer">
-            <div class="sim-bar-inner" data-width="10" style="width:0"></div>
-          </div>
-          <div class="sim-nums">
-            <div class="sim-num-item">
-              <div class="sim-num-label">月間収益</div>
-              <div class="sim-num-val en">¥10,000</div>
-            </div>
-          </div>
-        </div>
-        <div class="sim-right">
-          <div class="sim-right-annual en">¥120,000</div>
-          <div class="sim-right-label">年間換算</div>
-        </div>
+    <div class="flow-grid rv">
+      <div class="flow-step">
+        <div class="flow-num">01</div>
+        <div class="flow-title">お客様へ案内</div>
+        <div class="flow-body">QRコード・チラシ・口頭案内など、貴社のチャネルでお客様に映像オプションをご案内いただきます。</div>
+        <div class="flow-actor">貴社</div>
       </div>
-
-      <div class="sim-row">
-        <div class="sim-left">
-          <div class="sim-case en">per month</div>
-          <div class="sim-count">2<span> 件</span></div>
-          <div class="sim-base">¥10,000 × 2件</div>
-        </div>
-        <div class="sim-center">
-          <div class="sim-bar-outer">
-            <div class="sim-bar-inner" data-width="20" style="width:0"></div>
-          </div>
-          <div class="sim-nums">
-            <div class="sim-num-item">
-              <div class="sim-num-label">月間収益</div>
-              <div class="sim-num-val en">¥20,000</div>
-            </div>
-          </div>
-        </div>
-        <div class="sim-right">
-          <div class="sim-right-annual en">¥240,000</div>
-          <div class="sim-right-label">年間換算</div>
-        </div>
+      <div class="flow-step">
+        <div class="flow-num">02</div>
+        <div class="flow-title">お客様が申込</div>
+        <div class="flow-body">専用フォームからお客様が直接申込。決済・連絡対応はFilmLinkが行います。</div>
+        <div class="flow-actor">FilmLink</div>
       </div>
-
-      <div class="sim-row">
-        <div class="sim-left">
-          <div class="sim-case en">per month</div>
-          <div class="sim-count">3<span> 件</span></div>
-          <div class="sim-base">¥10,000 × 3件</div>
-        </div>
-        <div class="sim-center">
-          <div class="sim-bar-outer">
-            <div class="sim-bar-inner" data-width="30" style="width:0"></div>
-          </div>
-          <div class="sim-nums">
-            <div class="sim-num-item">
-              <div class="sim-num-label">月間収益</div>
-              <div class="sim-num-val en">¥30,000</div>
-            </div>
-          </div>
-        </div>
-        <div class="sim-right">
-          <div class="sim-right-annual en">¥360,000</div>
-          <div class="sim-right-label">年間換算</div>
-        </div>
+      <div class="flow-step">
+        <div class="flow-num">03</div>
+        <div class="flow-title">日程調整</div>
+        <div class="flow-body">お客様・貴社・FilmLinkの3者で撮影日を調整。貴社のご負担はこの調整までです。</div>
+        <div class="flow-actor">貴社 × FilmLink</div>
       </div>
-
-      <div class="sim-row sim-highlight">
-        <div class="sim-left">
-          <div class="sim-case en">per month</div>
-          <div class="sim-count">5<span> 件</span></div>
-          <div class="sim-base">¥10,000 × 5件</div>
-        </div>
-        <div class="sim-center">
-          <div class="sim-bar-outer">
-            <div class="sim-bar-inner" data-width="50" style="width:0"></div>
-          </div>
-          <div class="sim-nums">
-            <div class="sim-num-item">
-              <div class="sim-num-label">月間収益</div>
-              <div class="sim-num-val en">¥50,000</div>
-            </div>
-          </div>
-        </div>
-        <div class="sim-right">
-          <div class="sim-right-annual en">¥600,000</div>
-          <div class="sim-right-label">年間換算</div>
-        </div>
+      <div class="flow-step">
+        <div class="flow-num">04</div>
+        <div class="flow-title">撮影・編集</div>
+        <div class="flow-body">FilmLinkのプロカメラマンが訪問撮影。編集・BGM・テロップ・修正対応まで対応します。</div>
+        <div class="flow-actor">FilmLink</div>
       </div>
-
-      <div class="sim-row">
-        <div class="sim-left">
-          <div class="sim-case en">per month</div>
-          <div class="sim-count">8<span> 件</span></div>
-          <div class="sim-base">¥10,000 × 8件</div>
-        </div>
-        <div class="sim-center">
-          <div class="sim-bar-outer">
-            <div class="sim-bar-inner" data-width="70" style="width:0"></div>
-          </div>
-          <div class="sim-nums">
-            <div class="sim-num-item">
-              <div class="sim-num-label">月間収益</div>
-              <div class="sim-num-val en">¥80,000</div>
-            </div>
-          </div>
-        </div>
-        <div class="sim-right">
-          <div class="sim-right-annual en">¥960,000</div>
-          <div class="sim-right-label">年間換算</div>
-        </div>
+      <div class="flow-step">
+        <div class="flow-num">05</div>
+        <div class="flow-title">納品・完了</div>
+        <div class="flow-body">URLでお客様へ納品。完成成果に応じた条件は、提携契約時に貴社と個別にすり合わせます。</div>
+        <div class="flow-actor">FilmLink</div>
       </div>
-
-      <div class="sim-row">
-        <div class="sim-left">
-          <div class="sim-case en">per month</div>
-          <div class="sim-count">10<span> 件</span></div>
-          <div class="sim-base">¥10,000 × 10件</div>
-        </div>
-        <div class="sim-center">
-          <div class="sim-bar-outer">
-            <div class="sim-bar-inner" data-width="88" style="width:0"></div>
-          </div>
-          <div class="sim-nums">
-            <div class="sim-num-item">
-              <div class="sim-num-label">月間収益</div>
-              <div class="sim-num-val en">¥100,000</div>
-            </div>
-          </div>
-        </div>
-        <div class="sim-right">
-          <div class="sim-right-annual en">¥1,200,000</div>
-          <div class="sim-right-label">年間換算</div>
-        </div>
-      </div>
-
     </div>
-
-    <p class="sim-note">
-      ※ 上記は「有料老人ホーム × 日常記録ムービー（¥50,000）」の場合の試算です。<br>
-      ※ プランや業種によって単価は異なります（メッセージムービー ¥25,000〜、ライフストーリー ¥100,000〜）。<br>
-      ※ 費用は完全成果報酬型のため、売れなければ提携先様への請求は一切発生しません。
-    </p>
   </div>
 </section>
 
-<!-- ════ § 7 CASES ════ -->
-<section class="page page--white" id="cases" data-dot="Cases">
+
+<!-- ════ § CASES ════ -->
+<section class="page page--white" id="cases" data-dot="Cases" style="align-items:flex-start; padding-top:120px; padding-bottom:120px;">
   <div class="container">
     <div class="st rv">
       <div class="st-en">CASES</div>
       <div class="st-body">
-        <p class="st-label">導入事例 / 活用イメージ</p>
-        <h2 class="st-ja">こんな使い方を<br>しています。</h2>
-        <p class="st-sub">業種を選ばず、お客様との接点をお持ちであれば映像オプションを自然に組み込めます。</p>
+        <p class="st-label">活用イメージ</p>
+        <h2 class="st-ja">既存サービスに、<br>FilmLinkを掛け合わせると。</h2>
+        <p class="st-sub">貴社のサービスに映像を組み合わせると、お客様の体験はどう変わり、どんな価値が生まれるのか。業種ごとに具体的な活用イメージをご紹介します。</p>
       </div>
     </div>
-    <div class="cases-layout">
-      <div class="case-card rv">
-        <div class="case-top case-top--care">
-          <div class="case-top-content">
-            <span class="case-badge badge--real">導入事例</span>
-            <div class="case-top-title">有料老人ホームへの<br>映像オプション導入</div>
-          </div>
+
+    <!-- CASE 1: 介護施設 -->
+    <div class="case-deep rv">
+      <div class="case-deep-head">
+        <div class="case-deep-num en">01</div>
+        <div>
+          <div class="case-deep-cat">介護施設・有料老人ホーム</div>
+          <div class="case-deep-title">"見えにくい毎日"を、ご家族の安心に変える。</div>
         </div>
-        <div class="case-bot">
-          <blockquote class="case-quote">「おじいちゃん、こんなに笑うんだね」——なかなか面会に来られないご家族が、映像を受け取って泣いていたと聞きました。</blockquote>
-          <ul class="case-list">
-            <li>施設で穏やかに過ごす日常・スタッフとの会話をドキュメンタリー調で撮影</li>
-            <li>遠方の家族が「安心できる贈り物」として誕生日・長寿祝いに継続リピート</li>
-            <li>施設側は「案内と日程調整」のみ。業務負担ゼロ</li>
-            <li>「映像オプションがある施設」として他施設との差別化トークに活用</li>
-          </ul>
-          <div class="case-chips">
-            <span class="chip">日常記録ムービー ¥50,000〜</span>
-            <span class="chip">メッセージムービー ¥25,000〜</span>
-            <span class="chip">ライフストーリー ¥100,000〜</span>
+      </div>
+      <div class="case-deep-grid">
+        <div class="case-deep-img case-img-care"></div>
+        <div class="case-deep-body">
+          <div class="case-deep-section">
+            <div class="case-deep-label">既存サービスにプラスする価値</div>
+            <p>介護・生活支援というサービスに、「ご家族へ届ける記録」という価値を上乗せします。離れて暮らすご家族の不安や、施設選びの段階にいるご家族の判断材料として機能します。</p>
+          </div>
+          <div class="case-deep-section">
+            <div class="case-deep-label">活用シーン</div>
+            <ul class="case-deep-list">
+              <li>誕生日・長寿祝い・敬老の日のお祝いとして</li>
+              <li>入居3ヶ月・1年など節目のタイミングで</li>
+              <li>家族面談時に「最近の様子をお渡しする」として</li>
+              <li>遠方のご家族へ年数回のお便り映像として</li>
+            </ul>
+          </div>
+          <div class="case-deep-section">
+            <div class="case-deep-label">想定されるご家族の反応</div>
+            <blockquote class="case-deep-quote">「写真では分からなかった、本人の今の表情と声が見られて泣きました。」</blockquote>
+            <blockquote class="case-deep-quote">「面会に行けない罪悪感が、少し軽くなりました。」</blockquote>
+            <blockquote class="case-deep-quote">「父がスタッフさんと笑い合っているのを見て、ここを選んで良かったと思えました。」</blockquote>
+          </div>
+          <div class="case-deep-section">
+            <div class="case-deep-label">施設様への副次効果</div>
+            <ul class="case-deep-list">
+              <li>「ご家族との関係構築」の手段として機能する</li>
+              <li>入居検討中のご家族への安心材料・差別化軸になる</li>
+              <li>スタッフのケア品質が"映像として可視化される"</li>
+            </ul>
           </div>
         </div>
       </div>
-      <div class="case-card rv rv-d1">
-        <div class="case-top case-top--travel">
-          <div class="case-top-content">
-            <span class="case-badge badge--concept">活用イメージ</span>
-            <div class="case-top-title">旅行会社・ツアーとの<br>連携モデル</div>
+    </div>
+
+    <!-- CASE 2: 旅行会社 -->
+    <div class="case-deep rv">
+      <div class="case-deep-head">
+        <div class="case-deep-num en">02</div>
+        <div>
+          <div class="case-deep-cat">旅行会社・ツアー事業者</div>
+          <div class="case-deep-title">"旅行"を、人生の物語に変える。</div>
+        </div>
+      </div>
+      <div class="case-deep-grid case-deep-grid-rev">
+        <div class="case-deep-body">
+          <div class="case-deep-section">
+            <div class="case-deep-label">既存サービスにプラスする価値</div>
+            <p>「旅行を販売する」だけで終わらせず、「旅行という体験を、家族の物語として残す」ところまでをパッケージ化します。記念旅行・家族旅行・ハネムーンなど、お客様にとって特別な意味を持つ旅ほど効果的です。</p>
+          </div>
+          <div class="case-deep-section">
+            <div class="case-deep-label">活用シーン</div>
+            <ul class="case-deep-list">
+              <li>金婚式・銀婚式・還暦など記念旅行のオプションとして</li>
+              <li>家族3世代旅行・親孝行旅行のグレードアップとして</li>
+              <li>ハネムーン・プロポーズ旅行のサプライズ演出として</li>
+              <li>ペット同伴・特別な事情のある旅行の記録として</li>
+            </ul>
+          </div>
+          <div class="case-deep-section">
+            <div class="case-deep-label">想定されるお客様の反応</div>
+            <blockquote class="case-deep-quote">「写真は撮ったけど、家族みんなが映っている動画はなかった。家宝になりました。」</blockquote>
+            <blockquote class="case-deep-quote">「親が"こんなに笑ってる自分は久しぶりだ"と言ってくれて、企画して良かったです。」</blockquote>
+            <blockquote class="case-deep-quote">「次の旅行もまたお願いしたい。これはもう、旅行の一部です。」</blockquote>
+          </div>
+          <div class="case-deep-section">
+            <div class="case-deep-label">旅行会社様への副次効果</div>
+            <ul class="case-deep-list">
+              <li>「ただ旅行を売る代理店」からの脱却・差別化</li>
+              <li>SNS・口コミでの拡散性が高い体験価値</li>
+              <li>記念日ごとのリピート・ご家族紹介につながる</li>
+            </ul>
           </div>
         </div>
-        <div class="case-bot">
-          <blockquote class="case-quote">「ただ旅行した記録ではなく、私たちの物語になった」——金婚式旅行のご夫婦が、映像を見て何度も泣いたと話してくれました。</blockquote>
-          <ul class="case-list">
-            <li>景色だけでなく、旅先で交わされる言葉・表情・関係性を映像化</li>
-            <li>家族旅行・記念旅行のお客様にQRコードを渡すだけで完結</li>
-            <li>「旅行会社の付加価値」として口コミ・紹介に直結する体験を提供</li>
-            <li>旅行会社側の撮影・制作対応は一切不要</li>
-          </ul>
-          <div class="case-chips">
-            <span class="chip">旅行記念ムービー ¥35,000〜</span>
-            <span class="chip">家族旅行ドキュメント ¥55,000〜</span>
+        <div class="case-deep-img case-img-travel"></div>
+      </div>
+    </div>
+
+    <!-- CASE 3: 工務店 -->
+    <div class="case-deep rv">
+      <div class="case-deep-head">
+        <div class="case-deep-num en">03</div>
+        <div>
+          <div class="case-deep-cat">工務店・ハウスメーカー</div>
+          <div class="case-deep-title">"家を建てる"を、家族の記録に変える。</div>
+        </div>
+      </div>
+      <div class="case-deep-grid">
+        <div class="case-deep-img case-img-const"></div>
+        <div class="case-deep-body">
+          <div class="case-deep-section">
+            <div class="case-deep-label">既存サービスにプラスする価値</div>
+            <p>「家を建てる」という人生の大きな出来事を、ご家族の物語として記録します。地鎮祭・上棟・完成・引き渡しのプロセス全体が、お客様にとって "一生振り返れる思い出" に変わります。</p>
+          </div>
+          <div class="case-deep-section">
+            <div class="case-deep-label">活用シーン</div>
+            <ul class="case-deep-list">
+              <li>地鎮祭・上棟式の家族記録ムービー</li>
+              <li>建設過程のドキュメンタリー（着工〜竣工）</li>
+              <li>引き渡しセレモニーのサプライズ映像</li>
+              <li>"家とともに育つ"記念日撮影プラン</li>
+            </ul>
+          </div>
+          <div class="case-deep-section">
+            <div class="case-deep-label">想定されるお客様の反応</div>
+            <blockquote class="case-deep-quote">「家ができるまでの過程を、子どもにも残してあげられた。」</blockquote>
+            <blockquote class="case-deep-quote">「ハウスメーカー選びで迷っていたけど、この体験ごと買って良かったと思います。」</blockquote>
+            <blockquote class="case-deep-quote">「友人にこの動画を見せたら、紹介の話になりました。」</blockquote>
+          </div>
+          <div class="case-deep-section">
+            <div class="case-deep-label">工務店様への副次効果</div>
+            <ul class="case-deep-list">
+              <li>"建てる体験そのもの"で他社と差別化できる</li>
+              <li>OB顧客との関係維持・再受注のきっかけになる</li>
+              <li>SNS・紹介経由での新規顧客流入が見込める</li>
+            </ul>
           </div>
         </div>
       </div>
+    </div>
+
+    <!-- CASE 4: ジム/スクール -->
+    <div class="case-deep rv">
+      <div class="case-deep-head">
+        <div class="case-deep-num en">04</div>
+        <div>
+          <div class="case-deep-cat">パーソナルジム・スクール</div>
+          <div class="case-deep-title">"努力"を、卒業記念に変える。</div>
+        </div>
+      </div>
+      <div class="case-deep-grid case-deep-grid-rev">
+        <div class="case-deep-body">
+          <div class="case-deep-section">
+            <div class="case-deep-label">既存サービスにプラスする価値</div>
+            <p>パーソナルジム・学習塾・各種スクールでは「結果に至るまでの過程」が大きな価値です。映像はその過程を可視化し、お客様にとって"通った意味"を強く印象づける記念品になります。</p>
+          </div>
+          <div class="case-deep-section">
+            <div class="case-deep-label">活用シーン</div>
+            <ul class="case-deep-list">
+              <li>パーソナルジムのコース卒業・ビフォーアフター記録</li>
+              <li>学習塾の合格報告・卒塾ムービー</li>
+              <li>習い事スクールの発表会・進級記念映像</li>
+              <li>大会・コンテスト前の挑戦ドキュメンタリー</li>
+            </ul>
+          </div>
+          <div class="case-deep-section">
+            <div class="case-deep-label">想定されるお客様の反応</div>
+            <blockquote class="case-deep-quote">「努力した過程が形に残ると、自信になります。」</blockquote>
+            <blockquote class="case-deep-quote">「子どもの成長記録として、家族で何度も見返しています。」</blockquote>
+            <blockquote class="case-deep-quote">「友人に動画を見せたら、自分も通いたいと言われました。」</blockquote>
+          </div>
+          <div class="case-deep-section">
+            <div class="case-deep-label">運営側への副次効果</div>
+            <ul class="case-deep-list">
+              <li>"成果を可視化する場"としての差別化軸</li>
+              <li>SNS拡散・紹介経由の新規入会につながる</li>
+              <li>卒業生との継続的な関係構築のきっかけになる</li>
+            </ul>
+          </div>
+        </div>
+        <div class="case-deep-img case-img-gym"></div>
+      </div>
+    </div>
+
+    <!-- CASE 5: ウエディング -->
+    <div class="case-deep rv">
+      <div class="case-deep-head">
+        <div class="case-deep-num en">05</div>
+        <div>
+          <div class="case-deep-cat">ウエディング関連</div>
+          <div class="case-deep-title">"特別な一日"を、家族のすべての時間に。</div>
+        </div>
+      </div>
+      <div class="case-deep-grid">
+        <div class="case-deep-img case-img-wedding"></div>
+        <div class="case-deep-body">
+          <div class="case-deep-section">
+            <div class="case-deep-label">既存サービスにプラスする価値</div>
+            <p>結婚式当日だけでなく、前撮り・準備期間・ご両家の関係づくりまで含めて、おふたりとご家族の "結婚というプロセス全体" を記録するオプションとして組み込めます。</p>
+          </div>
+          <div class="case-deep-section">
+            <div class="case-deep-label">活用シーン</div>
+            <ul class="case-deep-list">
+              <li>前撮り・ドレス試着の裏側ドキュメンタリー</li>
+              <li>家族紹介・両家顔合わせの記念映像</li>
+              <li>挙式準備・リハーサル風景のサプライズムービー</li>
+              <li>結婚記念日ごとに送る「あの日のおふたり」</li>
+            </ul>
+          </div>
+          <div class="case-deep-section">
+            <div class="case-deep-label">想定されるお客様の反応</div>
+            <blockquote class="case-deep-quote">「式当日の動画はあったけど、前撮りや準備期間の動画が一番グッときました。」</blockquote>
+            <blockquote class="case-deep-quote">「両親に渡したら、何度も繰り返し見てくれて、本当に喜ばれました。」</blockquote>
+          </div>
+          <div class="case-deep-section">
+            <div class="case-deep-label">提携先様への副次効果</div>
+            <ul class="case-deep-list">
+              <li>"挙式当日"を超えた体験設計ができる</li>
+              <li>SNS拡散性が高く、新規見込み客への訴求力が強い</li>
+              <li>結婚記念日のリピート企画にもつながる</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CASE 6: 美容/サロン -->
+    <div class="case-deep rv">
+      <div class="case-deep-head">
+        <div class="case-deep-num en">06</div>
+        <div>
+          <div class="case-deep-cat">サロン・美容関連</div>
+          <div class="case-deep-title">"変化"を、自信の記録に変える。</div>
+        </div>
+      </div>
+      <div class="case-deep-grid case-deep-grid-rev">
+        <div class="case-deep-body">
+          <div class="case-deep-section">
+            <div class="case-deep-label">既存サービスにプラスする価値</div>
+            <p>美容・サロンの施術は "結果" だけでなく "変化のプロセス" に大きな価値があります。映像はその変化を残し、お客様にとって自分への投資の意味を強く実感できる体験になります。</p>
+          </div>
+          <div class="case-deep-section">
+            <div class="case-deep-label">活用シーン</div>
+            <ul class="case-deep-list">
+              <li>結婚式・成人式・記念撮影前のヘアメイク記録</li>
+              <li>美容コース・トリートメントのビフォーアフター映像</li>
+              <li>体験談・お客様インタビューSNS用映像</li>
+              <li>長期通院型サロンの卒業記念ムービー</li>
+            </ul>
+          </div>
+          <div class="case-deep-section">
+            <div class="case-deep-label">想定されるお客様の反応</div>
+            <blockquote class="case-deep-quote">「自分の変化が映像で見られて、ここに通って良かったと心から思えました。」</blockquote>
+            <blockquote class="case-deep-quote">「友人に動画でビフォーアフターを見せたら、紹介につながりました。」</blockquote>
+          </div>
+          <div class="case-deep-section">
+            <div class="case-deep-label">サロン様への副次効果</div>
+            <ul class="case-deep-list">
+              <li>SNS集客に強く、口コミ拡散しやすい</li>
+              <li>客単価アップ・継続率アップにつながる</li>
+              <li>"結果が見える店"としてのブランド構築</li>
+            </ul>
+          </div>
+        </div>
+        <div class="case-deep-img case-img-salon"></div>
+      </div>
+    </div>
+
+    <div class="cases-other rv">
+      <p>※ 上記はあくまで一例です。「お客様の体験に意味があるサービス」であれば、業種を問わず映像オプションは組み込めます。<br>葬祭・神社仏閣・ペットケア・スポーツチーム・医療・教育機関などの実装例もご相談可能です。</p>
     </div>
   </div>
 </section>
@@ -1560,50 +2407,190 @@
       <div class="st-en">INDUSTRY</div>
       <div class="st-body">
         <p class="st-label">対象業種</p>
-        <h2 class="st-ja">あなたの業種でも、<br>きっと使えます。</h2>
-        <p class="st-sub">「お客様の大切な瞬間」に立ち会う事業なら、映像オプションは自然に組み込めます。</p>
+        <h2 class="st-ja">"お客様の体験"を扱う事業なら、<br>どの業種でも組み込めます。</h2>
+        <p class="st-sub">FilmLinkは特定の業種に縛られません。お客様の体験に意味があるサービスなら、映像オプションは自然に組み込めます。下記は一例です。</p>
       </div>
     </div>
     <div class="ind-grid rv">
       <div class="ind-card">
-        <div class="ind-icon">🏠</div>
-        <div class="ind-name">工務店 / ハウスメーカー</div>
-        <div class="ind-eg">完成引き渡し記念<br>建設ドキュメンタリー</div>
+        <div class="ind-img ind-img-care"></div>
+        <div class="ind-content">
+          <div class="ind-icon"><svg viewBox="0 0 24 24"><rect x="4" y="8" width="16" height="13" rx="1.5"/><path d="M9 8V5a3 3 0 016 0v3M12 13v4M10 15h4"/></svg></div>
+          <div class="ind-name">介護施設・老人ホーム</div>
+          <div class="ind-eg">入居者日常記録<br>ライフストーリー</div>
+        </div>
       </div>
       <div class="ind-card">
-        <div class="ind-icon">👴</div>
-        <div class="ind-name">介護施設</div>
-        <div class="ind-eg">入居者日常記録<br>ライフストーリー</div>
+        <div class="ind-img ind-img-travel"></div>
+        <div class="ind-content">
+          <div class="ind-icon"><svg viewBox="0 0 24 24"><path d="M3 13l8-3 9-6 1 1-6 9-3 8-2-5-7-4z"/></svg></div>
+          <div class="ind-name">旅行会社・ツアー</div>
+          <div class="ind-eg">記念旅行ドキュメント<br>家族旅行ムービー</div>
+        </div>
       </div>
       <div class="ind-card">
-        <div class="ind-icon">✈️</div>
-        <div class="ind-name">旅行会社</div>
-        <div class="ind-eg">ツアー思い出ムービー<br>家族旅行ドキュメント</div>
+        <div class="ind-img ind-img-const"></div>
+        <div class="ind-content">
+          <div class="ind-icon"><svg viewBox="0 0 24 24"><path d="M3 11l9-7 9 7v9a1 1 0 01-1 1H4a1 1 0 01-1-1z"/><path d="M9 21v-7h6v7"/></svg></div>
+          <div class="ind-name">工務店・ハウスメーカー</div>
+          <div class="ind-eg">完成引き渡し記念<br>建設ドキュメンタリー</div>
+        </div>
       </div>
       <div class="ind-card">
-        <div class="ind-icon">🏋️</div>
-        <div class="ind-name">パーソナルジム</div>
-        <div class="ind-eg">ビフォーアフター記録<br>コース卒業記念</div>
+        <div class="ind-img ind-img-gym"></div>
+        <div class="ind-content">
+          <div class="ind-icon"><svg viewBox="0 0 24 24"><path d="M5 9v6M19 9v6M2 11v2M22 11v2M5 12h14"/></svg></div>
+          <div class="ind-name">パーソナルジム</div>
+          <div class="ind-eg">ビフォーアフター記録<br>コース卒業記念</div>
+        </div>
       </div>
       <div class="ind-card">
-        <div class="ind-icon">📚</div>
-        <div class="ind-name">学習塾 / スクール</div>
-        <div class="ind-eg">成長記録・卒業ムービー<br>合格記念映像</div>
+        <div class="ind-img ind-img-school"></div>
+        <div class="ind-content">
+          <div class="ind-icon"><svg viewBox="0 0 24 24"><path d="M4 5a2 2 0 012-2h11v18H6a2 2 0 01-2-2zM17 3v18M9 8h4M9 12h4"/></svg></div>
+          <div class="ind-name">学習塾・スクール</div>
+          <div class="ind-eg">成長記録・卒業ムービー<br>合格記念映像</div>
+        </div>
       </div>
       <div class="ind-card">
-        <div class="ind-icon">💒</div>
-        <div class="ind-name">ウエディング関連</div>
-        <div class="ind-eg">前撮りサブムービー<br>ドレス試着記念</div>
+        <div class="ind-img ind-img-wedding"></div>
+        <div class="ind-content">
+          <div class="ind-icon"><svg viewBox="0 0 24 24"><path d="M12 21s-7-4.5-7-10a4 4 0 017-2.5A4 4 0 0119 11c0 5.5-7 10-7 10z"/></svg></div>
+          <div class="ind-name">ウエディング関連</div>
+          <div class="ind-eg">前撮りサブムービー<br>家族の記念映像</div>
+        </div>
       </div>
       <div class="ind-card">
-        <div class="ind-icon">🌿</div>
-        <div class="ind-name">サロン / 美容</div>
-        <div class="ind-eg">変化の記録ムービー<br>体験談SNS映像</div>
+        <div class="ind-img ind-img-salon"></div>
+        <div class="ind-content">
+          <div class="ind-icon"><svg viewBox="0 0 24 24"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M20 4L8.5 16M20 20L8.5 8"/></svg></div>
+          <div class="ind-name">サロン・美容</div>
+          <div class="ind-eg">変化の記録ムービー<br>体験談SNS映像</div>
+        </div>
+      </div>
+      <div class="ind-card">
+        <div class="ind-img ind-img-pet"></div>
+        <div class="ind-content">
+          <div class="ind-icon"><svg viewBox="0 0 24 24"><circle cx="9" cy="10" r="2"/><circle cx="15" cy="10" r="2"/><path d="M5 15c1 3 4 5 7 5s6-2 7-5"/></svg></div>
+          <div class="ind-name">ペット関連</div>
+          <div class="ind-eg">家族の一員としての記録<br>ライフムービー</div>
+        </div>
       </div>
       <div class="ind-card ind-card--cta">
-        <div class="ind-icon">💬</div>
-        <div class="ind-name">その他の業種も</div>
-        <div class="ind-eg">まずご相談ください</div>
+        <div class="ind-img ind-img-other"></div>
+        <div class="ind-content">
+          <div class="ind-icon"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg></div>
+          <div class="ind-name">その他の業種も</div>
+          <div class="ind-eg">まずご相談ください</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════ § SAFETY (左右フロー型) ════ -->
+<section class="page page--cream pat-cross" id="safety" data-dot="Safety">
+  <div class="container">
+    <div class="st rv">
+      <div class="st-en">SAFETY</div>
+      <div class="st-body">
+        <p class="st-label">安心して導入できる理由</p>
+        <h2 class="st-ja">現場の不安は、<br>すべてFilmLinkが受け持ちます。</h2>
+        <p class="st-sub">「お客様の大切な瞬間」を扱うからこそ、提携先様が心配される一つひとつを、FilmLink側で設計・運用します。</p>
+      </div>
+    </div>
+
+    <div class="safety-flow rv">
+      <ul class="safety-flow-items">
+        <li class="safety-flow-item">
+          <div class="safety-flow-num en">01</div>
+          <div class="safety-flow-text">
+            <div class="safety-flow-title">撮影同意の取得</div>
+            <div class="safety-flow-body">同意書の雛形を用意し、お客様（被写体）から書面・電子で取得</div>
+          </div>
+        </li>
+        <li class="safety-flow-item">
+          <div class="safety-flow-num en">02</div>
+          <div class="safety-flow-text">
+            <div class="safety-flow-title">個人情報の管理</div>
+            <div class="safety-flow-body">映像・連絡先はFilmLink内で厳重管理。納品はパスワード付きURL</div>
+          </div>
+        </li>
+        <li class="safety-flow-item">
+          <div class="safety-flow-num en">03</div>
+          <div class="safety-flow-text">
+            <div class="safety-flow-title">撮影現場での配慮</div>
+            <div class="safety-flow-body">高齢者・体調・プライバシーに配慮した経験あるスタッフが対応</div>
+          </div>
+        </li>
+        <li class="safety-flow-item">
+          <div class="safety-flow-num en">04</div>
+          <div class="safety-flow-text">
+            <div class="safety-flow-title">他のお客様への配慮</div>
+            <div class="safety-flow-body">映り込み回避の構図設計、必要なら事前周知文面もFilmLinkが用意</div>
+          </div>
+        </li>
+        <li class="safety-flow-item">
+          <div class="safety-flow-num en">05</div>
+          <div class="safety-flow-text">
+            <div class="safety-flow-title">契約・終了の自由</div>
+            <div class="safety-flow-body">最低件数・期間の縛りなし。貴社のタイミングでいつでも終了可能</div>
+          </div>
+        </li>
+        <li class="safety-flow-item">
+          <div class="safety-flow-num en">06</div>
+          <div class="safety-flow-text">
+            <div class="safety-flow-title">クレーム時の一次対応</div>
+            <div class="safety-flow-body">修正・トラブルはFilmLinkが一次受け。貴社へ連絡が来た時の運用も設計</div>
+          </div>
+        </li>
+      </ul>
+
+      <div class="safety-flow-arrow" aria-hidden="true">
+        <svg viewBox="0 0 100 200" preserveAspectRatio="none">
+          <path d="M5 100 L75 100" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/>
+          <path d="M65 92 L75 100 L65 108" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+
+      <div class="safety-flow-receiver">
+        <div class="safety-flow-receiver-inner">
+          <div class="safety-flow-receiver-label">All Handled by</div>
+          <div class="safety-flow-receiver-logo">Film<span>Link</span></div>
+          <div class="safety-flow-receiver-text">同意取得・個人情報・撮影配慮・契約・クレーム対応まで、<br>提携先様が不安に思う部分はすべてFilmLinkが対応します。</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════ § STORY (想い + CTA) ════ -->
+<section class="page page--dark2 pat-grid" id="story" data-dot="Story">
+  <div class="container">
+    <div class="st rv">
+      <div class="st-en">STORY</div>
+      <div class="st-body">
+        <p class="st-label">私たちの想い</p>
+        <h2 class="st-ja">映像は、「その場限り」を<br>永遠に変える力がある。</h2>
+      </div>
+    </div>
+    <div class="story-grid rv">
+      <div class="story-rep">
+        <div class="story-rep-photo" aria-label="代表者写真"></div>
+        <div class="story-rep-meta">
+          <div class="story-rep-label">FilmLink 代表</div>
+          <div class="story-rep-name">代表者氏名</div>
+          <div class="story-rep-role">Founder / Director</div>
+        </div>
+      </div>
+      <div class="story-text">
+        <p>子供の頃の運動会のビデオ、家族で出かけた公園でのホームビデオ。大人になってから見返したとき、当時の空気や感情が鮮明に蘇り、胸が熱くなった経験はありませんか？</p>
+        <p>人はそれぞれ、固有のストーリーを歩んでいます。その瞬間をフィルムとして残し、いつでもあの日の感動に帰れるようにすること。それが映像の本質的な価値だと、私たちは信じています。</p>
+        <p>FilmLinkが組みたいのは、お客様の体験に本気で向き合っている事業者様です。映像を売るためではなく、<em>貴社が生み出す「最高の笑顔」を一生の記録として残すこと</em>を、一緒に実現したいと考えています。</p>
+        <div class="story-cta">
+          <p class="story-cta-text">まずは、貴社のサービスにどんな価値を足せるか、<br>15分だけお話しさせてください。</p>
+          <a href="#contact" class="btn btn--y story-cta-btn">無料相談を予約する →</a>
+        </div>
       </div>
     </div>
   </div>
@@ -1622,7 +2609,7 @@
     <div class="faq-wrap rv" style="max-width:800px">
       <details>
         <summary>初期費用はかかりますか？<span class="faq-ico">+</span></summary>
-        <p class="faq-ans">一切かかりません。設備投資・人材確保・月額費用もすべてゼロです。お客様に申し込みが入った時だけ費用が発生し、売上の20%が提携先様の収益、80%がFilmLinkの収益になる成果報酬型のモデルです。</p>
+        <p class="faq-ans">一切かかりません。設備投資・人材確保・月額費用もすべてゼロです。完全成果報酬型のため、お客様の申込が発生しなければ提携先様への請求も発生しません。具体的な条件は打ち合わせにてご案内します。</p>
       </details>
       <details>
         <summary>私たちがやることは何ですか？<span class="faq-ico">+</span></summary>
@@ -1631,10 +2618,6 @@
       <details>
         <summary>私たちのブランド名で提供できますか？<span class="faq-ico">+</span></summary>
         <p class="faq-ans">可能です。「〇〇（貴社名）の映像オプション」として案内していただく形も歓迎しています。FilmLinkを前面に出す必要はなく、貴社サービスの延長として自然に組み込めます。</p>
-      </details>
-      <details>
-        <summary>報酬の受け取り方はどうなりますか？<span class="faq-ico">+</span></summary>
-        <p class="faq-ans">売上が発生した翌月末に、指定口座へ振込でお支払いします。毎月の件数・金額の明細はFilmLinkから送付しますので、管理の手間もかかりません。</p>
       </details>
       <details>
         <summary>契約の縛りや最低件数はありますか？<span class="faq-ico">+</span></summary>
@@ -1647,6 +2630,26 @@
       <details>
         <summary>撮影者は誰が来ますか？資格はありますか？<span class="faq-ico">+</span></summary>
         <p class="faq-ans">FilmLinkが手配するプロのカメラマンが伺います。現場の雰囲気・撮影対象者への配慮を重視した経験豊富なスタッフが担当します。介護施設など配慮が必要な現場での撮影経験も持っています。</p>
+      </details>
+      <details>
+        <summary>撮影同意はどうやって取得しますか？<span class="faq-ico">+</span></summary>
+        <p class="faq-ans">FilmLinkで撮影同意書の雛形を用意しています。被写体となるお客様（ご本人またはご家族）から書面または電子同意を取得してから撮影を開始します。貴社の運用に合わせて取得タイミング・項目を調整可能です。</p>
+      </details>
+      <details>
+        <summary>肖像権・個人情報の扱いはどうなりますか？<span class="faq-ico">+</span></summary>
+        <p class="faq-ans">取得した映像・連絡先はFilmLink内で厳重に管理し、納品先以外の第三者には提供しません。納品はパスワード付きURLで行い、FilmLinkのSNS等への二次利用は同意がない限り行いません。</p>
+      </details>
+      <details>
+        <summary>他のお客様や入居者が映り込まないか心配です。<span class="faq-ico">+</span></summary>
+        <p class="faq-ans">撮影前に動線・撮影箇所を貴社と打ち合わせし、他のお客様・入居者が映り込まない構図で撮影します。万が一映り込んだ場合は編集でモザイク・カット処理を行います。必要に応じて事前周知の文面もFilmLinkがご用意します。</p>
+      </details>
+      <details>
+        <summary>クレーム・修正対応はどうなりますか？<span class="faq-ico">+</span></summary>
+        <p class="faq-ans">納品物への修正は規定回数内で無償対応します。お客様からの苦情・トラブルはFilmLinkが一次受けで対応する体制です。貴社へ直接連絡が来た場合の対応フローも導入時に一緒に設計します。</p>
+      </details>
+      <details>
+        <summary>テスト導入5社の条件を教えてください。<span class="faq-ico">+</span></summary>
+        <p class="faq-ans">先着5社のテスト導入パートナー様には、(1)初期導入サポート無償、(2)案内ツール（QRコード・チラシ雛形）の作成費無償、(3)初回案件のフィードバック共有を条件にご一緒いただきます。エリア・業種は問いません。詳しい条件は打ち合わせにてご案内します。</p>
       </details>
     </div>
   </div>
@@ -1661,14 +2664,23 @@
           ▶ 先着5社限定｜テスト導入パートナー募集中
         </div>
         <h2>まずは、<br>15分話しましょう。</h2>
-        <p>現在、一緒に実績を積んでいただけるパートナー事業者様を先着5社で募集しています。「うちの業種に合うか分からない」という方も大歓迎。まずは気軽にお話しましょう。</p>
+        <p>現在、一緒に新しい価値を創っていただけるテスト導入パートナーを先着5社で募集しています。「うちの業種に合うか分からない」という方も大歓迎。まずは気軽にお話しましょう。</p>
         <ul class="cta-checklist">
           <li>初期費用ゼロ・月額費用ゼロ</li>
-          <li>撮影・編集はすべてFilmLink対応</li>
-          <li>売れた分だけレベニューシェア</li>
+          <li>完全成果報酬型・リスクゼロ</li>
+          <li>撮影・編集・納品はすべてFilmLink対応</li>
           <li>いつでも終了可能・縛りなし</li>
           <li>最短2週間で導入スタート</li>
         </ul>
+        <div class="cta-pilot">
+          <div class="cta-pilot-title">▶ テスト導入5社限定の特典</div>
+          <ul class="cta-pilot-list">
+            <li>初期導入サポート無償</li>
+            <li>QRコード・案内チラシ雛形の制作費無償</li>
+            <li>初回案件のフィードバック共有でサービスを一緒に磨く</li>
+          </ul>
+          <div class="cta-pilot-note">業種・エリアは問いません。</div>
+        </div>
       </div>
       <div class="form-box rv rv-d1">
         <div class="form-box-title">無料相談フォーム</div>
@@ -1702,6 +2714,10 @@
           <label class="f-label">ご質問・ご要望（任意）</label>
           <textarea class="f-textarea" placeholder="気になっていること、何でもどうぞ"></textarea>
         </div>
+        <label class="f-consent">
+          <input type="checkbox" class="f-consent-check">
+          <span><a href="/privacy" target="_blank">プライバシーポリシー</a>に同意の上、送信します。</span>
+        </label>
         <button class="f-submit">送信する（返信は1営業日以内）</button>
         <p class="f-note">無料 · しつこい営業なし</p>
       </div>
@@ -1711,8 +2727,37 @@
 
 <!-- ════ Footer ════ -->
 <footer>
-  <a href="#hero" class="footer-logo">Film<span>Link</span></a>
-  <p>© 2026 FilmLink. All rights reserved.</p>
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <a href="#hero" class="footer-logo">Film<span>Link</span></a>
+      <p class="footer-tagline">既存事業者様向けの<br>映像オプション提携モデル</p>
+    </div>
+    <div class="footer-col">
+      <h4>Service</h4>
+      <ul>
+        <li><a href="#concept">コンセプト</a></li>
+        <li><a href="#flow">導入フロー</a></li>
+        <li><a href="#cases">活用イメージ</a></li>
+        <li><a href="#safety">安心の取り組み</a></li>
+        <li><a href="#story">私たちの想い</a></li>
+        <li><a href="#faq">FAQ</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Contact</h4>
+      <ul>
+        <li><a href="#contact">無料相談フォーム</a></li>
+        <li><span>返信は1営業日以内</span></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2026 FilmLink. All rights reserved.</p>
+    <div class="footer-bottom-links">
+      <a href="/privacy">プライバシーポリシー</a>
+      <a href="/terms">特定商取引法に基づく表記</a>
+    </div>
+  </div>
 </footer>
 
 <script>
