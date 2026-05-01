@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FilmLink 営業ツール</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="header">
+  <div class="logo">Film<span>Link</span></div>
+  <div id="campaignBadge" class="campaign-badge none">キャンペーン未選択</div>
+  <div class="header-spacer"></div>
+  <div id="statusDot" class="status-dot" title="送信待機中"></div>
+</div>
+
+<div class="tabs">
+  <div class="tab active" data-tab="config">設定</div>
+  <div class="tab" data-tab="message">文面</div>
+  <div class="tab" data-tab="send">送信</div>
+  <div class="tab" data-tab="results">結果</div>
+</div>
+
+<div class="main">
+
+  <!-- ─── 設定タブ ─── -->
+  <div id="tab-config" class="panel active">
+    <div class="card">
+      <div class="section-title">送信者情報</div>
+      <div class="field-grid">
+        <div class="field">
+          <label>担当者名（フルネーム）</label>
+          <input type="text" id="cfg-name" placeholder="田中　惇谷">
+        </div>
+        <div class="field">
+          <label>会社名</label>
+          <input type="text" id="cfg-company" placeholder="FilmLink">
+        </div>
+        <div class="field">
+          <label>姓（苗字）</label>
+          <input type="text" id="cfg-last_name" placeholder="田中">
+        </div>
+        <div class="field">
+          <label>名</label>
+          <input type="text" id="cfg-first_name" placeholder="惇谷">
+        </div>
+        <div class="field">
+          <label>姓（カナ）</label>
+          <input type="text" id="cfg-last_name_kana" placeholder="タナカ">
+        </div>
+        <div class="field">
+          <label>名（カナ）</label>
+          <input type="text" id="cfg-first_name_kana" placeholder="アツヤ">
+        </div>
+        <div class="field full">
+          <label>メールアドレス</label>
+          <input type="email" id="cfg-email" placeholder="example@gmail.com">
+        </div>
+        <div class="field">
+          <label>電話番号</label>
+          <input type="tel" id="cfg-phone" placeholder="080-xxxx-xxxx">
+        </div>
+        <div class="field">
+          <label>FAX</label>
+          <input type="tel" id="cfg-fax" placeholder="080-xxxx-xxxx">
+        </div>
+        <div class="field">
+          <label>郵便番号</label>
+          <input type="text" id="cfg-postal_code" placeholder="262-0032">
+        </div>
+        <div class="field">
+          <label>住所</label>
+          <input type="text" id="cfg-address" placeholder="千葉県千葉市...">
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="section-title">送信設定</div>
+      <div class="field-grid">
+        <div class="field">
+          <label>1日の送信上限</label>
+          <input type="text" id="cfg-daily_limit" placeholder="1000">
+        </div>
+        <div class="field">
+          <label>同時並列数 <span style="color:var(--muted);font-weight:400;">（推奨: 2〜4）</span></label>
+          <input type="text" id="cfg-parallel_contexts" placeholder="4">
+        </div>
+        <div class="field full">
+          <label>施設間の待機時間（ms） <span style="color:var(--muted);font-weight:400;">— 1送信ごとの待ち。短すぎるとBot検知される。推奨: 3000〜5000</span></label>
+          <input type="text" id="cfg-delay_ms" placeholder="3000">
+        </div>
+        <div class="field">
+          <label>送信開始時刻 <span style="color:var(--muted);font-weight:400;">（HH:MM）</span></label>
+          <input type="text" id="cfg-send_start" placeholder="09:00">
+        </div>
+        <div class="field">
+          <label>送信終了時刻 <span style="color:var(--muted);font-weight:400;">（HH:MM）— この時刻以降は翌日まで自動待機</span></label>
+          <input type="text" id="cfg-send_end" placeholder="18:00">
+        </div>
+      </div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="saveConfig()">保存する</button>
+      <span id="cfgSaveMsg" style="font-size:12px; color:var(--muted);"></span>
+    </div>
+  </div>
+
+  <!-- ─── 文面タブ ─── -->
+  <div id="tab-message" class="panel">
+    <div class="campaign-select-row">
+      <select id="msgCampaignSelect" onchange="loadMessage()">
+        <option value="">── キャンペーンを選択 ──</option>
+      </select>
+    </div>
+    <div id="msgEditor" style="display:none;">
+      <div class="card">
+        <div class="section-title">件名</div>
+        <div class="field">
+          <input type="text" id="msgSubject" placeholder="件名を入力...">
+        </div>
+      </div>
+      <div class="card">
+        <div class="section-title">本文</div>
+        <div class="field">
+          <textarea id="msgBody" style="min-height:320px;" oninput="updateCharCount(this, 'msgBodyCount')" placeholder="本文を入力..."></textarea>
+          <div class="char-count" id="msgBodyCount">0 文字</div>
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="saveMessage()">保存する</button>
+        <span id="msgSaveMsg" style="font-size:12px; color:var(--muted);"></span>
+      </div>
+    </div>
+    <div id="msgPlaceholder" class="empty-state">キャンペーンを選択してください</div>
+  </div>
+
+  <!-- ─── 送信タブ ─── -->
+  <div id="tab-send" class="panel">
+    <div class="campaign-select-row">
+      <select id="sendCampaignSelect" onchange="onSendCampaignChange()">
+        <option value="">── キャンペーンを選択 ──</option>
+      </select>
+    </div>
+    <div id="sendStats" class="stat-row" style="display:none;">
+      <div class="stat">
+        <div class="stat-num" id="statTotal">-</div>
+        <div class="stat-label">総件数</div>
+      </div>
+      <div class="stat pending">
+        <div class="stat-num" id="statPending">-</div>
+        <div class="stat-label">未送信</div>
+      </div>
+      <div class="stat sent">
+        <div class="stat-num" id="statSent">-</div>
+        <div class="stat-label">送信済</div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-bottom:16px;">
+      <div class="field-grid" style="grid-template-columns:1fr 1fr 1fr; margin-bottom:14px;">
+        <div class="field">
+          <label>モード</label>
+          <select id="sendMode">
+            <option value="dry">ドライラン（確認用）</option>
+            <option value="live">本番送信</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>サンプル件数（空=全件）</label>
+          <input type="text" id="sendSample" placeholder="例: 5">
+        </div>
+        <div class="field" style="justify-content:flex-end;">
+          <label>&nbsp;</label>
+          <div class="btn-row">
+            <button class="btn btn-green" id="btnStart" onclick="startSend()">送信開始</button>
+            <button class="btn btn-red" id="btnStop" onclick="stopSend()" disabled>停止</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-title">実行ログ</div>
+    <div class="terminal" id="logTerminal">待機中...</div>
+  </div>
+
+  <!-- ─── 結果タブ ─── -->
+  <div id="tab-results" class="panel">
+    <div class="campaign-select-row">
+      <select id="resultsCampaignSelect" onchange="loadResults()">
+        <option value="">── キャンペーンを選択 ──</option>
+      </select>
+      <button class="btn btn-outline" onclick="loadResults()">更新</button>
+    </div>
+    <div class="filter-row">
+      <button class="filter-btn active" data-filter="all" onclick="setFilter('all', this)">すべて</button>
+      <button class="filter-btn" data-filter="送信完了" onclick="setFilter('送信完了', this)">送信完了</button>
+      <button class="filter-btn" data-filter="エラー" onclick="setFilter('エラー', this)">エラー</button>
+      <button class="filter-btn" data-filter="スキップ" onclick="setFilter('スキップ', this)">スキップ</button>
+      <button class="filter-btn" data-filter="ドライラン" onclick="setFilter('ドライラン', this)">ドライラン</button>
+    </div>
+    <div id="resultsContainer"><div class="empty-state">キャンペーンを選択してください</div></div>
+  </div>
+
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast">
+  <span class="toast-icon" id="toastIcon">✓</span>
+  <span id="toastMsg">保存しました</span>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>

@@ -4,12 +4,14 @@
   "description": "FilmLink 施設お問い合わせフォーム自動送信ツール",
   "main": "send_forms.js",
   "scripts": {
+    "gui": "node gui/server.js",
     "send": "node send_forms.js",
     "preview": "node send_forms.js --preview"
   },
   "dependencies": {
     "csv-parse": "^5.5.3",
     "csv-stringify": "^6.4.6",
+    "express": "^5.2.1",
     "googleapis": "^171.4.0",
     "playwright": "^1.43.0"
   }
