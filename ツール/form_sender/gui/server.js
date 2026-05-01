@@ -43,9 +43,18 @@ app.get('/api/campaigns', (req, res) => {
           if (isShodan) {
             // SHODANフォーマット: フォームURLがあるものをカウント
             const withForm = rows.filter(r => r['お問い合わせフォーム'] && r['お問い合わせフォーム'].trim());
+            // results.csvから送信済みURLを読み込んでカウント
+            const resultsPath = path.join(ROOT, 'campaigns', d, 'results.csv');
+            let sentUrls = new Set();
+            if (fs.existsSync(resultsPath)) {
+              try {
+                const rrows = parse(fs.readFileSync(resultsPath, 'utf8'), { columns: true, skip_empty_lines: true });
+                rrows.filter(r => r['送信結果'] === '送信完了').forEach(r => sentUrls.add(r['フォームURL']));
+              } catch (_) {}
+            }
             stats.total = rows.length;
-            stats.pending = withForm.length;
-            stats.sent = 0;
+            stats.sent = sentUrls.size;
+            stats.pending = withForm.filter(r => !sentUrls.has(r['お問い合わせフォーム'])).length;
           } else {
             stats.total = rows.length;
             stats.pending = rows.filter(r => !r['ステータス'] || r['ステータス'] === '未処理').length;
@@ -126,7 +135,7 @@ app.post('/api/send', (req, res) => {
   if (campaign) { args.push('--campaign'); args.push(`campaigns/${campaign}`); }
   if (sample) { args.push('--sample'); args.push(String(sample)); }
 
-  sendProcess = spawn('node', args, { cwd: ROOT });
+  sendProcess = spawn(process.execPath, args, { cwd: ROOT });
 
   // ブラウザへの書き込みが可能かどうかフラグで管理
   let resAlive = true;
@@ -135,6 +144,12 @@ app.post('/api/send', (req, res) => {
     try { res.write(`data: ${JSON.stringify({ type, data })}\n\n`); } catch (_) {}
   };
 
+  sendProcess.on('error', err => {
+    send('err', `起動エラー: ${err.message}`);
+    if (resAlive) { try { res.end(); } catch (_) {} }
+    resAlive = false;
+    sendProcess = null;
+  });
   sendProcess.stdout.on('data', d => send('log', d.toString()));
   sendProcess.stderr.on('data', d => send('err', d.toString()));
   sendProcess.on('close', code => {
