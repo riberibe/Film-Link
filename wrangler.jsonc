@@ -1,0 +1,14 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "film-link",
+  "compatibility_date": "2026-05-02",
+  "observability": {
+    "enabled": true
+  },
+  "assets": {
+    "directory": "02_提案資料"
+  },
+  "compatibility_flags": [
+    "nodejs_compat"
+  ]
+}
