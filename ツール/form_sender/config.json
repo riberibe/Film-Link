@@ -22,7 +22,7 @@
     "delay_between_sites_ms": 6000,
     "send_window": {
       "start": "09:00",
-      "end": "18:00"
+      "end": "19:00"
     },
     "screenshot_dir": "./screenshots",
     "screenshot_mode": "errors_only",

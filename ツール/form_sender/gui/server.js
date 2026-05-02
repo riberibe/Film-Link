@@ -111,7 +111,7 @@ app.get('/api/results', (req, res) => {
   if (!fs.existsSync(resultsPath)) return res.json([]);
   try {
     const rows = parse(fs.readFileSync(resultsPath, 'utf8'), { columns: true, skip_empty_lines: true });
-    res.json(rows.slice(0, 500));
+    res.json(rows.slice(-1000).reverse());
   } catch (_) { res.json([]); }
 });
 

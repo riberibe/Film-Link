@@ -237,7 +237,9 @@ function renderResults() {
   const container = document.getElementById('resultsContainer');
   const filtered = currentFilter === 'all'
     ? allResults
-    : allResults.filter(r => (r['送信結果'] || '').includes(currentFilter));
+    : currentFilter === 'untrusted'
+      ? allResults.filter(r => (r['信頼度'] || '') === 'untrusted')
+      : allResults.filter(r => (r['送信結果'] || '').includes(currentFilter));
 
   if (!filtered.length) {
     container.innerHTML = '<div class="empty-state">該当データがありません</div>';
@@ -246,10 +248,22 @@ function renderResults() {
 
   const badge = r => {
     const v = r['送信結果'] || '';
-    if (v.includes('送信完了')) return `<span class="badge ok">送信完了</span>`;
+    const conf = r['信頼度'] || '';
+    if (v === '送信完了' && conf === 'untrusted') return `<span class="badge untrusted">送信完了（要確認）</span>`;
+    if (v === '送信完了') return `<span class="badge ok">送信完了</span>`;
+    if (v === '送信完了（要確認）') return `<span class="badge warn">送信完了（要確認）</span>`;
+    if (v.includes('送信失敗')) return `<span class="badge err">${esc(v)}</span>`;
     if (v.includes('ドライラン')) return `<span class="badge dry">ドライラン</span>`;
-    if (v.includes('エラー')) return `<span class="badge err">エラー</span>`;
-    return `<span class="badge skip">${v || 'スキップ'}</span>`;
+    return `<span class="badge skip">${esc(v) || 'スキップ'}</span>`;
+  };
+
+  const confidenceBadge = c => {
+    if (!c || c === '-') return '';
+    if (c === 'high')      return `<span style="color:#22c55e;font-size:10px;">high</span>`;
+    if (c === 'medium')    return `<span style="color:#f59e0b;font-size:10px;">medium</span>`;
+    if (c === 'low')       return `<span style="color:#ef4444;font-size:10px;">low</span>`;
+    if (c === 'untrusted') return `<span style="color:#94a3b8;font-size:10px;">旧データ</span>`;
+    return '';
   };
 
   container.innerHTML = `
@@ -258,20 +272,28 @@ function renderResults() {
         <thead>
           <tr>
             <th>No.</th>
+            <th>送信日時</th>
             <th>施設名</th>
             <th>フォームURL</th>
             <th>結果</th>
-            <th>エラー詳細</th>
+            <th>信頼度</th>
+            <th>入力済み欄</th>
+            <th>失敗ステージ</th>
+            <th>失敗詳細</th>
           </tr>
         </thead>
         <tbody>
           ${filtered.map(r => `
             <tr>
-              <td>${r['No.'] || ''}</td>
+              <td>${esc(r['No.'] || '')}</td>
+              <td style="font-size:11px; white-space:nowrap; color:var(--muted);">${esc(r['送信日時'] || '')}</td>
               <td>${esc(r['施設名'] || '')}</td>
               <td class="url-cell"><a href="${esc(r['フォームURL'] || '')}" target="_blank">${esc(r['フォームURL'] || '')}</a></td>
               <td>${badge(r)}</td>
-              <td style="font-size:11px; color:var(--muted);">${esc(r['エラー詳細'] || '')}</td>
+              <td>${confidenceBadge(r['信頼度'] || '')}</td>
+              <td style="font-size:11px; color:var(--muted); max-width:180px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;" title="${esc(r['入力済み欄'] || '')}">${esc(r['入力済み欄'] || '')}</td>
+              <td style="font-size:11px;">${esc(r['失敗ステージ'] || '')}</td>
+              <td style="font-size:11px; color:var(--muted);">${esc(r['失敗詳細'] || r['エラー詳細'] || '')}</td>
             </tr>
           `).join('')}
         </tbody>
